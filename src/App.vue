@@ -3,6 +3,7 @@ import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
 import {computed, ref, watch} from "vue";
 import axios from "axios";
+import {v4 as uuidv4} from 'uuid';
 
 const file = ref(null);
 const chunks = ref([]);
@@ -13,7 +14,7 @@ const progress = computed(() => Math.floor((uploaded.value * 100) / file.value?.
 
 const config = {
   method: 'POST',
-  url: 'http://127.0.0.1:3001/upload',
+  url: 'http://127.0.0.1:8080/file/247070db-86f5-4693-8fa3-eee8e0b157b6',
   headers: {
     'Content-Type': 'application/octet-stream'
   },
@@ -21,7 +22,8 @@ const config = {
 
 const createFormData = (chunk, key) => {
   const formData = new FormData;
-  formData.set('file', chunk, `${file.value?.name}.part.${key}`);
+  formData.set('block', chunk, `${file.value?.name}.part.${key}`);
+  formData.set('blockUUID', uuidv4());
   return formData;
 }
 
