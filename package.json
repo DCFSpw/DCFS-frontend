@@ -9,7 +9,8 @@
   "dependencies": {
     "axios": "^0.27.2",
     "uuid": "^9.0.0",
-    "vue": "^3.2.33"
+    "vue": "^3.2.33",
+    "workbox-window": "^6.5.4"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.1",
