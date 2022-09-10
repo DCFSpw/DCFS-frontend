@@ -14,7 +14,8 @@ const progress = computed(() => Math.floor((uploaded.value * 100) / file.value?.
 
 const config = {
   method: 'POST',
-  url: 'http://127.0.0.1:8080/file/247070db-86f5-4693-8fa3-eee8e0b157b6',
+  //url: 'http://127.0.0.1:8080/file/247070db-86f5-4693-8fa3-eee8e0b157b6',
+  url: 'http://127.0.0.1:3001/upload',
   headers: {
     'Content-Type': 'application/octet-stream'
   },
@@ -43,7 +44,7 @@ const upload = (chunk, key) => {
 
 const createChunks = () => {
   chunks.value = [];
-  const chunksNum = 10;
+  const chunksNum = 32;
   const size = Math.ceil(file.value.size / chunksNum);
   // 2MB
   //const size = 2_000_000, chunksNum = Math.ceil(file.value.size / size);
