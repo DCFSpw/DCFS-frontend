@@ -1,19 +1,40 @@
 {
-  "name": "vue-project",
-  "version": "0.0.0",
+  "name": "dcfs-frontend",
+  "version": "0.0.1",
+  "description": "Frontend for distributed cloud file system",
+  "productName": "DCFS Frontend",
+  "author": "RazorMeister",
+  "private": true,
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview --port 5050"
+    "lint": "eslint --ext .js,.vue ./",
+    "format": "prettier --write \"**/*.{js,vue,scss,html,md,json}\" --ignore-path .gitignore",
+    "test": "echo \"No test specified\" && exit 0",
+    "dev": "quasar dev",
+    "build": "quasar build",
+    "build:pwa": "quasar build -m pwa"
   },
   "dependencies": {
+    "@quasar/extras": "^1.0.0",
+    "@vueuse/core": "^9.2.0",
     "axios": "^0.27.2",
-    "uuid": "^9.0.0",
-    "vue": "^3.2.33",
-    "workbox-window": "^6.5.4"
+    "quasar": "^2.6.0",
+    "vue": "^3.0.0",
+    "vue-router": "^4.0.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^2.3.1",
-    "vite": "^2.9.5"
+    "@quasar/app-vite": "^1.0.0",
+    "autoprefixer": "^10.4.2",
+    "dotenv": "^16.0.2",
+    "eslint": "^8.10.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-vue": "^9.0.0",
+    "postcss": "^8.4.14",
+    "prettier": "^2.5.1",
+    "quasar-app-extension-vuelidate-rules": "^0.5.1"
+  },
+  "engines": {
+    "node": "^18 || ^16 || ^14.19",
+    "npm": ">= 6.13.4",
+    "yarn": ">= 1.21.1"
   }
 }
