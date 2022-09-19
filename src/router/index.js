@@ -2,7 +2,6 @@ import { route } from 'quasar/wrappers'
 import { createRouter, createMemoryHistory, createWebHistory, createWebHashHistory } from 'vue-router'
 import routes from './routes'
 import useUserSession from "src/modules/useUserSession";
-import {Notify} from "quasar";
 
 /*
  * If not building with SSR mode, you can
@@ -31,10 +30,6 @@ export default route(function (/* { store, ssrContext } */) {
   Router.beforeEach((to, from, next) => {
     const userSession = useUserSession()
     if (to.meta?.auth === true && !userSession.isLoggedIn) {
-      Notify.create({
-        type: 'negative',
-        message: 'You are not authenticated!'
-      })
       return next({ name: 'login' })
     }
 

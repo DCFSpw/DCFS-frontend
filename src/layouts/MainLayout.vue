@@ -16,6 +16,12 @@
         </q-toolbar-title>
 
         <div>Quasar v{{ $q.version }}</div>
+        <div class="q-ml-md">
+          <theme-switch/>
+        </div>
+        <div class="q-ml-md">
+          <q-btn @click="logout" label="Logout" />
+        </div>
       </q-toolbar>
     </q-header>
 
@@ -40,7 +46,13 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <transition
+        appear
+        enter-active-class="animated fadeIn"
+        leave-active-class="animated fadeOut"
+      >
+        <router-view />
+      </transition>
     </q-page-container>
   </q-layout>
 </template>
@@ -48,6 +60,8 @@
 <script>
 import { defineComponent, ref } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
+import useAuth from "src/modules/useAuth";
+import ThemeSwitch from "components/ThemeSwitch.vue";
 
 const linksList = [
   {
@@ -98,13 +112,16 @@ export default defineComponent({
   name: 'MainLayout',
 
   components: {
+    ThemeSwitch,
     EssentialLink
   },
 
   setup () {
     const leftDrawerOpen = ref(false)
+    const auth = useAuth()
 
     return {
+      logout: auth.logout,
       essentialLinks: linksList,
       leftDrawerOpen,
       toggleLeftDrawer () {
