@@ -1,1 +1,39 @@
 // app global css in SCSS form
+
+.q-btn .q-icon, .q-btn .q-spinner {
+  font-size: 1em;
+}
+
+
+.underline-link {
+  cursor: pointer;
+  display: inline-block;
+
+  &:after {
+    display: block;
+    content: '';
+    border-bottom: solid 3px;
+    transform: scaleX(0);
+    transition: transform 250ms ease-in-out;
+    transform-origin:  0 50%;
+  }
+  &:hover:after {
+    transform: scaleX(1);
+  }
+}
+
+.auth-card {
+  width: 90%;
+
+  @media (min-width: $breakpoint-sm-min) {
+    width: 80%;
+  }
+
+  @media (min-width: $breakpoint-md-min) {
+    width: 50%;
+  }
+
+  @media (min-width: $breakpoint-lg-min) {
+    width: 30%;
+  }
+}
