@@ -61,7 +61,7 @@ pipeline {
                     steps {
                         unstash 'build'
                         sh 'yes | rm -rf /home/flatly/apps/www/develop/*'
-                        sh 'cp -r ./dist/* /home/flatly/apps/www/develop/'
+                        sh 'cp -r ./dist/spa/* /home/flatly/apps/www/develop/'
                         cleanWs()
                     }
                 }
@@ -75,7 +75,7 @@ pipeline {
                     steps {
                         unstash 'build'
                         sh 'yes | rm -rf /home/flatly/apps/www/main/*'
-                        sh 'cp -r ./dist/* /home/flatly/apps/www/main/'
+                        sh 'cp -r ./dist/spa/* /home/flatly/apps/www/main/'
                         cleanWs()
                     }
                 }
