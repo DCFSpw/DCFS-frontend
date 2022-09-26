@@ -1,0 +1,85 @@
+pipeline {
+    agent none
+    stages {
+        stage('build and update') {
+            when {
+                anyOf {
+                    branch 'develop'
+                    branch 'main'
+                }
+            }
+            stages('build and update') {
+                stage('recreate old node_modules') {
+                    agent {
+                        label 'worker'
+                    }
+                    steps {
+                        sh 'if [ -f /mnt/front-cache/ ]; then tar -xf /mnt/front-cache/node_modules.tar -C .; fi'
+                    }
+                }
+                stage('install') {
+                    agent {
+                        label 'worker'
+                    }
+                    steps {
+                        sh 'npm install'
+                    }
+                }
+                stage('update global node_modules') {
+                    agent {
+                        label 'worker'
+                    }
+                    steps {
+                        sh 'tar -cf /mnt/front-cache/node_modules.tar node_modules'
+                    }
+                }
+                stage('build') {
+                    agent {
+                        label 'worker'
+                    }
+                    steps {
+                        // script {
+                        //     if (env.BRANCH_NAME == 'develop') {
+                        //         sh 'cd ./src/services; sed -i "s_https://localhost:7229_https://develop-backend.szczepienia.pw_g" api.js'
+                        //     } else {
+                        //         sh 'cd ./src/services; sed -i "s_https://localhost:7229_https://backend.szczepienia.pw_g" api.js'
+                        //     }
+                        // }
+
+                        sh 'npm run build'
+                        stash includes: 'dist/**', name: 'build'
+                        cleanWs()
+                    }
+                }
+                stage('update develop') {
+                    agent {
+                        label 'host'
+                    }
+                    when {
+                        branch 'develop'
+                    }
+                    steps {
+                        unstash 'build'
+                        sh 'yes | rm -rf /home/flatly/apps/www/develop/*'
+                        sh 'cp -r ./dist/* /home/flatly/apps/www/develop/'
+                        cleanWs()
+                    }
+                }
+                stage('update main') {
+                    agent {
+                        label 'host'
+                    }
+                    when {
+                        branch 'main'
+                    }
+                    steps {
+                        unstash 'build'
+                        sh 'yes | rm -rf /home/flatly/apps/www/main/*'
+                        sh 'cp -r ./dist/* /home/flatly/apps/www/main/'
+                        cleanWs()
+                    }
+                }
+            }
+        }
+    }
+}
