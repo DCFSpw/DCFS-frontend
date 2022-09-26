@@ -1,0 +1,56 @@
+pipeline {
+    agent none
+    stages {
+        stage('build and test job') {
+            agent {
+                label 'worker'
+            }
+            when {
+                // execute only on PRs to develop and main
+                anyOf {
+                    changeRequest target: 'main'
+                    changeRequest target: 'develop'
+                }
+            }
+            stages {
+                stage('recreate old node_modules') {
+                    steps {
+                        sh 'if [ -f /mnt/front-cache/ ]; then tar -xf /mnt/front-cache/node_modules.tar -C .; fi'
+                    }
+                }
+                stage('npm-install') {
+                    steps {
+                        sh 'npm install'
+                        stash name: 'repo'
+                    } 
+                }
+                stage('update global node_modules') {
+                    steps {
+                        sh 'tar -cf /mnt/front-cache/node_modules.tar node_modules'
+                    }
+                }
+                stage('build and test') {
+                    parallel {
+                        stage('build') {
+                            steps {
+                                unstash 'repo' 
+                                sh 'npm run build'
+                            }
+                        }
+                        stage('UT') {
+                            steps {
+                                unstash 'repo'
+                                sh 'npm run test'
+                            }
+                        }
+                    }
+                }
+                stage('clean workspace') {
+                    steps {
+                        cleanWs()
+                    }
+                }
+            }
+        }
+    }
+}
