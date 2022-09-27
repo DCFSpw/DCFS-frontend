@@ -3,10 +3,7 @@ import useUserSession from "src/modules/useUserSession";
 import {Notify} from "quasar";
 
 const AxiosInstance = axios.create({
-  baseURL:
-    process.env.NODE_ENV !== 'development'
-      ? process.env.VUE_APP_PRODUCTION_API_URL
-      : process.env.VUE_APP_LOCAL_API_URL,
+  baseURL: process.env.VUE_APP_API_URL,
   timeout: 10000,
   maxBodyLength: 5000,
   maxContentLength: 5000,
