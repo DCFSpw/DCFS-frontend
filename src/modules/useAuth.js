@@ -8,7 +8,7 @@ export default function () {
   const $q = useQuasar()
 
   const login = async (response) => {
-    userSession.token = response.token
+    userSession.token = response.data.token
     userSession.user = response.data
     $q.notify({ type: 'positive', message: 'Successfully logged in!' })
     await router.push({ name: 'dashboard'})
