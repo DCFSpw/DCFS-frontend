@@ -38,13 +38,13 @@ pipeline {
                         label 'worker'
                     }
                     steps {
-                        // script {
-                        //     if (env.BRANCH_NAME == 'develop') {
-                        //         sh 'cd ./src/services; sed -i "s_https://localhost:7229_https://develop-backend.szczepienia.pw_g" api.js'
-                        //     } else {
-                        //         sh 'cd ./src/services; sed -i "s_https://localhost:7229_https://backend.szczepienia.pw_g" api.js'
-                        //     }
-                        // }
+                        script {
+                            if (env.BRANCH_NAME == 'develop') {
+                                sh 'mv .env.develop .env'
+                            } else {
+                                sh 'mv .env.master .env'
+                            }
+                        }
 
                         sh 'npm run build'
                         stash includes: 'dist/**', name: 'build'
