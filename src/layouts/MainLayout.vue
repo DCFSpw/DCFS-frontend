@@ -60,8 +60,8 @@
 <script>
 import { defineComponent, ref } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
-import useAuth from "src/modules/useAuth";
 import ThemeSwitch from "components/ThemeSwitch.vue";
+import useLogout from "src/modules/Auth/useLogout";
 
 const linksList = [
   {
@@ -118,10 +118,10 @@ export default defineComponent({
 
   setup () {
     const leftDrawerOpen = ref(false)
-    const auth = useAuth()
+    const { logout } = useLogout()
 
     return {
-      logout: auth.logout,
+      logout,
       essentialLinks: linksList,
       leftDrawerOpen,
       toggleLeftDrawer () {

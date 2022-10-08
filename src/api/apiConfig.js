@@ -17,7 +17,7 @@ AxiosInstance.interceptors.request.use(
   request => {
     const userSession = useUserSession()
     if (userSession.isLoggedIn) {
-      request.headers.Authorization = `Bearer ${userSession.token}`
+      request.headers.Authorization = userSession.token //`Bearer ${userSession.token}`
     }
     return request
   },

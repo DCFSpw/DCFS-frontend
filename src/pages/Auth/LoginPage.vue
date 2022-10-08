@@ -19,7 +19,7 @@
       <q-form
         ref="form"
         greedy
-        @submit="onSubmit"
+        @submit="login"
       >
         <div class="row">
           <div class="col q-pa-sm">
@@ -71,32 +71,10 @@
 </template>
 
 <script setup>
-
 import { EMAIL_MAX, PASSWORD_MAX, PASSWORD_MIN } from "src/validation/const";
 
-import {reactive, ref} from "vue"
-import authApi from "src/api/authApi";
-import useAuth from "src/modules/useAuth";
 import ThemeSwitch from "components/ThemeSwitch.vue";
+import useLogin from "src/modules/Auth/useLogin";
 
-const auth = useAuth()
-
-const data = reactive({
-  email: '',
-  password: ''
-})
-const form = ref(null)
-const isLoading = ref(false)
-
-const onSubmit = async () => {
-  isLoading.value = true
-
-  try {
-    const response = await authApi.login(data)
-    await auth.login(response)
-  } finally {
-    isLoading.value = false
-  }
-}
-
+const { login, form, isLoading, data } = useLogin()
 </script>

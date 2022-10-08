@@ -19,7 +19,7 @@
       <q-form
         ref="form"
         greedy
-        @submit="onSubmit"
+        @submit="register"
       >
         <div class="row">
           <div class="col-xs-12 col-md-6 q-pa-sm">
@@ -116,36 +116,10 @@
 </template>
 
 <script setup>
-
 import { EMAIL_MAX, PASSWORD_MAX, PASSWORD_MIN, FIRST_NAME_MAX, LAST_NAME_MAX } from "src/validation/const";
 
-import {reactive, ref} from "vue"
-import authApi from "src/api/authApi";
-import useAuth from "src/modules/useAuth";
 import ThemeSwitch from "components/ThemeSwitch.vue";
+import useRegister from "src/modules/Auth/useRegister";
 
-const auth = useAuth();
-
-const data = reactive({
-  email: '',
-  password: '',
-  passwordRepeat: '',
-  firstName: '',
-  lastName: ''
-})
-const form = ref(null)
-const isLoading = ref(false)
-
-const onSubmit = async () => {
-  isLoading.value = true
-
-  try {
-    const { passwordRepeated, ...apiData } = data
-    await authApi.register(apiData)
-    await auth.register()
-  } finally {
-    isLoading.value = false
-  }
-}
-
+const { register, isLoading, form, data } = useRegister();
 </script>
