@@ -1,7 +1,7 @@
 import axios from "axios";
 import useUserSession from "src/modules/useUserSession";
 import {Notify} from "quasar";
-
+import {ErrorCodeEnum} from "src/api/errorCodeEnum";
 const AxiosInstance = axios.create({
   baseURL: process.env.VUE_APP_API_URL,
   timeout: 10000,
@@ -38,8 +38,15 @@ AxiosInstance.interceptors.response.use(
     } = response;
     return data ?? response.data;
   },
-  error => {
+  async (error) => {
     const errMsg = error.response.data?.message ?? 'Unknown error occurred. Please try again later.'
+    const code = error.response.data?.code ?? null
+
+    if (code === ErrorCodeEnum.UNAUTHORIZED) {
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+      window.location.href = '/'
+    }
 
     Notify.create({
       type: 'negative',

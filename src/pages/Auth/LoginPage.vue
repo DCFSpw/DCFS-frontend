@@ -17,7 +17,6 @@
     </q-card-section>
     <q-card-section>
       <q-form
-        ref="form"
         greedy
         @submit="onSubmit"
       >
@@ -85,7 +84,6 @@ const data = reactive({
   email: '',
   password: ''
 })
-const form = ref(null)
 const isLoading = ref(false)
 
 const onSubmit = async () => {
