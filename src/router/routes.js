@@ -25,7 +25,8 @@ const routes = [
       auth: true
     },
     children: [
-      { path: '', name: 'dashboard', component: () => import('pages/IndexPage.vue') }
+      { path: '', name: 'dashboard', component: () => import('pages/IndexPage.vue') },
+      { path: 'profile', name: 'profile', component: () => import('pages/UserProfile.vue') },
     ]
   },
 
