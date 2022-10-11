@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="hHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
         <q-btn
@@ -12,15 +12,47 @@
         />
 
         <q-toolbar-title>
-          Quasar App
+          Distributed Cloud File System
         </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
         <div class="q-ml-md">
-          <theme-switch/>
-        </div>
-        <div class="q-ml-md">
-          <q-btn @click="logout" label="Logout" />
+          <q-avatar color="grey" icon="fa-solid fa-user" style="cursor: pointer">
+            <q-menu>
+              <div class="row no-wrap q-pt-md justify-center">
+                Hello {{ user.firstName }} {{ user.lastName }}!
+              </div>
+              <div class="row no-wrap q-pa-md">
+                <div class="column justify-center">
+                  <theme-switch/>
+                </div>
+
+                <q-separator vertical inset class="q-mx-lg" />
+
+                <div class="items-center justify-center column">
+                  <div class="q-ma-sm row">
+                    <q-btn
+                      @click="() => router.push({ name: 'profile' })"
+                      color="primary"
+                      size="sm"
+                      v-close-popup
+                      label="Profile"
+                      icon="fa-solid fa-user-pen"
+                    />
+                  </div>
+                  <div class="q-ma-sm row">
+                    <q-btn
+                      @click="logout"
+                      color="primary"
+                      size="sm"
+                      v-close-popup
+                      label="Logout"
+                      icon="fa-solid fa-right-from-bracket"
+                    />
+                  </div>
+                </div>
+              </div>
+            </q-menu>
+          </q-avatar>
         </div>
       </q-toolbar>
     </q-header>
@@ -29,20 +61,37 @@
       v-model="leftDrawerOpen"
       show-if-above
       bordered
+      elevated
+      :width="200"
+      :breakpoint="500"
     >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
+      <q-scroll-area class="fit">
+        <q-list>
+          <template v-for="(menuItem, index) in menuList" :key="index">
+            <q-item
+              clickable
+              :active="menuItem.route === route.name"
+              v-ripple
+              :to="{name: menuItem.route }"
+            >
+              <q-item-section avatar>
+                <q-icon :name="menuItem.icon" />
+              </q-item-section>
+              <q-item-section>
+                {{ menuItem.label }}
+              </q-item-section>
+            </q-item>
+            <q-separator :key="'sep' + index"  v-if="menuItem.separator" />
+          </template>
+        </q-list>
+      </q-scroll-area>
 
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
+      <q-div class="absolute-bottom q-pa-sm" style="font-size: .7em">
+          <div style="font-size: 1.2em">@Authors</div>
+          <div>Tymoteusz Bartnik</div>
+          <div>Przemysław Dominikowski</div>
+          <div>Bartosz Błachut</div>
+      </q-div>
     </q-drawer>
 
     <q-page-container>
@@ -57,77 +106,33 @@
   </q-layout>
 </template>
 
-<script>
-import { defineComponent, ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
+<script setup>
+import { ref } from 'vue'
 import useAuth from "src/modules/useAuth";
 import ThemeSwitch from "components/ThemeSwitch.vue";
+import {useRoute, useRouter} from "vue-router";
+import useUserSession from "src/modules/useUserSession";
 
-const linksList = [
+const menuList = [
   {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
+    icon: 'fa-solid fa-house',
+    label: 'Home',
+    route: 'dashboard',
+    separator: true
   },
   {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
+    icon: 'fa-solid fa-user-pen',
+    label: 'Profile',
+    route: 'profile',
+    separator: false
   }
 ]
 
-export default defineComponent({
-  name: 'MainLayout',
-
-  components: {
-    ThemeSwitch,
-    EssentialLink
-  },
-
-  setup () {
-    const leftDrawerOpen = ref(false)
-    const auth = useAuth()
-
-    return {
-      logout: auth.logout,
-      essentialLinks: linksList,
-      leftDrawerOpen,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      }
-    }
-  }
-})
+const leftDrawerOpen = ref(false)
+const auth = useAuth()
+const logout = auth.logout
+const router = useRouter()
+const route = useRoute()
+const { user } = useUserSession()
+const toggleLeftDrawer = () => leftDrawerOpen.value = !leftDrawerOpen.value
 </script>

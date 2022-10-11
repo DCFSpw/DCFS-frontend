@@ -3,8 +3,8 @@
     <div class="q-col-gutter-sm flex row">
 
       <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
-        <q-card class="card-bg text-white">
-          <q-card-section class="text-h6 ">
+        <q-card>
+          <q-card-section>
             <div class="text-h6">Edit Profile</div>
           </q-card-section>
 
@@ -53,14 +53,15 @@
               :loading="profileLoading"
               @click="updateProfile"
               icon="fa-solid fa-pen-to-square"
+              :disabled="!dataChanged"
             />
           </q-card-actions>
         </q-card>
       </div>
 
       <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
-        <q-card class="card-bg text-white">
-          <q-card-section class="text-h6 q-pa-sm">
+        <q-card>
+          <q-card-section>
             <div class="text-h6">Change Password</div>
           </q-card-section>
           <q-card-section class="q-pa-sm">
@@ -112,6 +113,7 @@
                     lazy-rules
                     :rules="[
                       $rules.required('New password confirm is required'),
+                      $rules.sameAs(changePasswordData.newPassword, 'Repeated password is not the same')
                     ]"
                   />
                 </div>
@@ -138,7 +140,7 @@
 
 import { PASSWORD_MAX, PASSWORD_MIN } from "src/validation/const";
 
-import {onMounted} from "vue";
+import {onMounted, ref} from "vue";
 import useChangePassword from "src/modules/UserProfile/useChangePassword";
 import useProfileInfo from "src/modules/UserProfile/useProfileInfo";
 
@@ -147,7 +149,8 @@ const {
   data: profileData,
   isLoading: profileLoading,
   updateProfile,
-  getProfile
+  getProfile,
+  dataChanged
 } = useProfileInfo()
 
 const {
