@@ -27,6 +27,7 @@ const routes = [
     children: [
       { path: '', name: 'dashboard', component: () => import('pages/IndexPage.vue') },
       { path: 'profile', name: 'profile', component: () => import('pages/UserProfile.vue') },
+      { path: 'volumes', name: 'volumes', component: () => import('pages/VolumePage.vue') },
     ]
   },
 
