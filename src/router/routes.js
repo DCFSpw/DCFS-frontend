@@ -26,6 +26,7 @@ const routes = [
     },
     children: [
       { path: '', name: 'dashboard', component: () => import('pages/IndexPage.vue') },
+      { path: 'profile', name: 'profile', component: () => import('pages/UserProfile.vue') },
       { path: 'disks', name: 'disks', component: () => import('pages/Disk/DiskPage.vue') },
       { path: 'disks/oauth', name: 'diskOauth', component: () => import('pages/Disk/DiskOauthPage.vue') },
     ]
