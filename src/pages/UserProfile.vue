@@ -1,6 +1,6 @@
 <template>
-  <q-page class="q-pa-sm">
-    <div class="q-col-gutter-sm flex row">
+  <q-page class="q-pa-lg">
+    <div class="q-col-gutter-lg flex row">
 
       <div class="col-lg-6 col-md-6 col-xs-12 col-sm-12">
         <q-card>

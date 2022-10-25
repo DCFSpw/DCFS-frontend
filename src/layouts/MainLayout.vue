@@ -125,6 +125,12 @@ const menuList = [
     label: 'Profile',
     route: 'profile',
     separator: false
+  },
+  {
+    icon: 'fa-solid fa-floppy-disks',
+    label: 'Volumes',
+    route: 'volumes',
+    separator: false
   }
 ]
 
