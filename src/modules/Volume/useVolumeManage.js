@@ -1,7 +1,9 @@
 import {ref} from "vue";
 import volumeApi from "src/api/volumeApi";
+import {useQuasar} from "quasar";
 
 export default function() {
+  const $q = useQuasar()
   const isLoading = ref(false)
   const data = ref({settings: {}})
   const form = ref(null)
@@ -23,10 +25,12 @@ export default function() {
 
   const updateVolume = async (refresh) => {
     await makeAction(refresh, (data) => volumeApi.update(data.uuid, data))
+    $q.notify({ type: 'positive', message: 'Volume has been updated' })
   }
 
   const createVolume = async (refresh) => {
     await makeAction(() => refresh({ toLastPage: true }), (data) => volumeApi.create(data))
+    $q.notify({ type: 'positive', message: 'Volume has been created' })
   }
 
   return {
