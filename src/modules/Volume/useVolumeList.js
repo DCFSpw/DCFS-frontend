@@ -19,6 +19,10 @@ export default function() {
 
     try {
       data.value = await volumeApi.index({ page: page.value })
+
+      if (toLastPage && page.value !== data.value.pagination.totalPages) {
+        await getVolumes({ toLastPage })
+      }
     } finally {
       isLoading.value = false
     }

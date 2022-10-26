@@ -32,6 +32,10 @@ watch(currentPage, (newPage) => {
   props.callback()
 })
 
+watch(() => props.page, (newPage) => {
+  currentPage.value = newPage
+})
+
 onMounted(() => currentPage.value = props.page)
 
 const totalPages = computed(() => props.pagination?.totalPages ?? 1)
