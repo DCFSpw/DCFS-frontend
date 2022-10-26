@@ -29,7 +29,7 @@
 
         <confirmation-dialog
           v-slot="{ on }"
-          :callback="() => deleteVolume(volume, refresh)"
+          :callback="() => deleteVolume(volume, () => refresh({ deleting: true }))"
           :with-progress="true"
           :isLoading="isLoading"
           title="Confirmation"
