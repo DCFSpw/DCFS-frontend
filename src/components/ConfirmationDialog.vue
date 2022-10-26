@@ -13,7 +13,7 @@
         </q-card-section>
 
         <q-card-actions align="right" v-if="!withProgress || !isLoading">
-          <q-btn label="Cancel" color="primary" v-close-popup />
+          <q-btn label="Cancel" v-close-popup />
           <q-btn label="OK" color="primary" @click="onConfirm"/>
         </q-card-actions>
         <q-card-actions align="center" v-else class="q-mb-sm">

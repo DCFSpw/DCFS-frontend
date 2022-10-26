@@ -127,7 +127,7 @@ const menuList = [
     separator: false
   },
   {
-    icon: 'fa-solid fa-floppy-disks',
+    icon: 'fa-solid fa-save',
     label: 'Volumes',
     route: 'volumes',
     separator: false

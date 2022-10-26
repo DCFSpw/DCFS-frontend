@@ -4,7 +4,7 @@
       v-slot="{ on }"
       :refresh="getVolumes"
     >
-      <q-btn color="positive" icon="fa-solid fa-pencil" label="Add new" @click="on"/>
+      <q-btn color="positive" icon="fa-solid fa-plus" label="Add new" class="q-ma-sm" @click="on"/>
     </volume-form>
 
     <my-pagination v-model:page="page" :callback="getVolumes" :is-loading="isLoading" :pagination="data.pagination">

@@ -6,9 +6,13 @@ export default function() {
   const data = ref({})
   const page = ref(1)
 
-  const getVolumes = async ({ toLastPage } = {}) => {
+  const getVolumes = async ({ toLastPage, deleting } = {}) => {
     if (toLastPage) {
       page.value = data.value.pagination.totalPages
+    }
+
+    if (deleting && data.value.pagination.recordsOnPage <= 1) {
+      page.value--;
     }
 
     isLoading.value = true;

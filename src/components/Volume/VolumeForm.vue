@@ -80,9 +80,9 @@
         </q-card-section>
 
         <q-card-actions align="right" v-if="!isLoading">
-          <q-btn label="Cancel" color="primary" v-close-popup />
-          <q-btn color="primary" label="Create" @click="() => createVolume(refresh)" v-if="creating"/>
-          <q-btn color="primary" label="Update" @click="() => updateVolume(refresh)" v-else/>
+          <q-btn label="Cancel" v-close-popup />
+          <q-btn color="positive" label="Create" icon="fa-solid fa-plus" @click="() => createVolume(refresh)" v-if="creating"/>
+          <q-btn color="primary" label="Update" icon="fa-solid fa-pencil" @click="() => updateVolume(refresh)" v-else/>
         </q-card-actions>
         <q-card-actions align="center" v-else class="q-mb-sm">
           <q-spinner size="4em" color="primary"/>
