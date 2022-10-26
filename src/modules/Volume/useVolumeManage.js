@@ -30,6 +30,7 @@ export default function() {
 
   const createVolume = async (refresh) => {
     await makeAction(() => refresh({ toLastPage: true }), (data) => volumeApi.create(data))
+    data.value = {settings: {}}
     $q.notify({ type: 'positive', message: 'Volume has been created' })
   }
 
