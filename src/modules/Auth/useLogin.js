@@ -20,8 +20,8 @@ export default function () {
 
     try {
       const response = await authApi.login(data)
-      userSession.token = response.data.token
-      userSession.user = response.data
+      userSession.token = response.token
+      userSession.user = response
       $q.notify({ type: 'positive', message: 'Successfully logged in!' })
       await router.push({ name: 'dashboard'})
     } finally {

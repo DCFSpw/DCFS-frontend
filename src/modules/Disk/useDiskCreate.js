@@ -9,7 +9,7 @@ export default function () {
     name: ''
   })
 
-  const createDisk = async () => {
+  const createDisk = async (refresh) => {
     const valid = await form.value.validate();
     if (!valid) {
       return;

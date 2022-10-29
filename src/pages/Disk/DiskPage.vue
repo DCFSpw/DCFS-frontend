@@ -1,56 +1,25 @@
 <template>
-  <div>
-    <q-btn
-      label="Add new disk"
-      @click="createDialogIsOpen = true"
-      color="primary"
-      icon="fa-solid fa-right-to-bracket"
-    />
+  <q-page class="q-pa-lg">
+    <disk-create-form
+      v-slot="{ on }"
+      :refresh="getDisks"
+    >
+      <q-btn color="positive" icon="fa-solid fa-plus" label="Add new disk" class="q-ma-sm" @click="on"/>
+    </disk-create-form>
 
-    <q-dialog v-model="createDialogIsOpen">
-      <q-card>
-        <q-card-section>
-          <div class="text-h6">Create new disk</div>
-        </q-card-section>
-
-        <q-card-section class="q-pt-none">
-          <q-form
-            ref="form"
-            greedy
-          >
-            <div class="row">
-              <div class="col q-pa-sm">
-                <q-input
-                  type="text"
-                  filled
-                  v-model="data.name"
-                  label="Name"
-                  :rules="[
-                    $rules.required('Name is required'),
-                  ]"
-                />
-              </div>
-            </div>
-          </q-form>
-        </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn label="Cancel" color="negative" v-close-popup />
-          <q-btn label="Create" @click="createDisk" color="primary" :loading="isLoading" icon="fa-solid fa-right-to-bracket"/>
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-  </div>
+    <my-pagination v-model:page="page" :callback="getDisks" :is-loading="isLoading" :pagination="data.pagination">
+      <div class="q-col-gutter-lg flex row">
+        <disk-item v-for="disk of data.data" :key="disk.uuid" :disk="disk" :refresh="getDisks"/>
+      </div>
+    </my-pagination>
+  </q-page>
 </template>
 
 <script setup>
-import {ref} from "vue";
-import useCreateDisk from "src/modules/Disk/useCreateDisk";
+import MyPagination from "components/MyPagination.vue";
+import DiskItem from "components/Disk/DiskItem.vue";
+import useDiskList from "src/modules/Disk/useDiskList";
+import DiskCreateForm from "components/Disk/DiskCreateForm.vue";
 
-const { createDisk, isLoading, data, form } = useCreateDisk();
-const createDialogIsOpen = ref(false);
+const { isLoading, data, page, getDisks } = useDiskList()
 </script>
-
-<style scoped>
-
-</style>
