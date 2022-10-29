@@ -125,6 +125,12 @@ const menuList = [
     label: 'Profile',
     route: 'profile',
     separator: false
+  },
+  {
+    icon: 'fa-solid fa-save',
+    label: 'Volumes',
+    route: 'volumes',
+    separator: false
   }
 ]
 
