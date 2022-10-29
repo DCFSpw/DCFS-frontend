@@ -50,9 +50,6 @@
                   </template>
                 </q-select>
               </div>
-
-
-
             </div>
           </q-form>
         </q-card-section>

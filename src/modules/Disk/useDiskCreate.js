@@ -19,14 +19,14 @@ export default function () {
 
     try {
       const response = await diskApi.create({
-        ...data,
-        providerUUID: 'dcc7708a-993d-4775-902f-dd266a5f2138',
-        volumeUUID: '654d47a6-dba0-4bc7-9cee-9099d456fe8a',
-        credentials: ''
+        name: data.name,
+        providerUUID: data.provider.uuid,
+        volumeUUID: 'ed7e168f-f23a-45e5-83bb-2e5df04acd85',
+        credentials: {}
       })
 
-      localStorage.setItem(DISK_CREATION_UID_KEY, response.response.uuid)
-      window.location.replace(response.response.link)
+      localStorage.setItem(DISK_CREATION_UID_KEY, response.disk.uuid)
+      window.location.replace(response.link)
     } finally {
       isLoading.value = false
     }
