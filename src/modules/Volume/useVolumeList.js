@@ -1,37 +1,16 @@
-import {ref} from "vue";
 import volumeApi from "src/api/volumeApi";
+import usePaginatedList from "src/modules/usePaginatedList.js";
 
 export default function() {
-  const isLoading = ref(false)
-  const data = ref({})
-  const page = ref(1)
+  const { isLoading, data, page, getData, isEmpty } = usePaginatedList()
 
-  const getVolumes = async ({ toLastPage, deleting } = {}) => {
-    if (toLastPage) {
-      page.value = data.value.pagination.totalPages
-    }
-
-    if (deleting && data.value.pagination.recordsOnPage <= 1) {
-      page.value--;
-    }
-
-    isLoading.value = true;
-
-    try {
-      data.value = await volumeApi.index({ page: page.value })
-
-      if (toLastPage && page.value !== data.value.pagination.totalPages) {
-        await getVolumes({ toLastPage })
-      }
-    } finally {
-      isLoading.value = false
-    }
-  }
+  const getVolumes = (cfg = {}) => getData(volumeApi.index, cfg)
 
   return {
     isLoading,
     data,
     page,
-    getVolumes
+    getVolumes,
+    isEmpty
   }
 }

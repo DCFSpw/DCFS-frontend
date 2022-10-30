@@ -5,7 +5,7 @@
         <div class="text-h6 text-center">{{ name }}</div>
       </q-card-section>
 
-      <q-separator dark inset />
+      <q-separator inset />
 
       <q-card-section class="col">
         <ul>

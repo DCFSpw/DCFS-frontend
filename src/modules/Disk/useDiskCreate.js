@@ -1,13 +1,12 @@
-import {reactive, ref} from 'vue';
+import {ref} from 'vue';
 import diskApi from 'src/api/diskApi';
 import {DISK_CREATION_UID_KEY} from "src/modules/Disk/Const/DiskConst";
+import {isOauth} from "src/modules/Provider/providerType.js";
 
 export default function () {
   const isLoading = ref(false)
   const form = ref(null)
-  const data = reactive({
-    name: ''
-  })
+  const data = ref({credentials: {}})
 
   const createDisk = async (refresh) => {
     const valid = await form.value.validate();
@@ -17,16 +16,23 @@ export default function () {
 
     isLoading.value = true
 
+    const oauth = isOauth(data.value.provider.type)
+
     try {
       const response = await diskApi.create({
-        name: data.name,
-        providerUUID: data.provider.uuid,
-        volumeUUID: 'ed7e168f-f23a-45e5-83bb-2e5df04acd85',
-        credentials: {}
+        name: data.value.name,
+        providerUUID: data.value.provider.uuid,
+        volumeUUID: data.value.volume.uuid,
+        credentials: oauth ? {} : data.value.credentials
       })
 
-      localStorage.setItem(DISK_CREATION_UID_KEY, response.disk.uuid)
-      window.location.replace(response.link)
+      if (oauth) {
+        localStorage.setItem(DISK_CREATION_UID_KEY, response.disk.uuid)
+        window.location.replace(response.link)
+      } else {
+        await refresh({ toLastPage: true })
+        data.value = {credentials: {}}
+      }
     } finally {
       isLoading.value = false
     }
