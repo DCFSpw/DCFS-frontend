@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div class="q-ma-sm">
+    <div v-if="emptyResult" class="flex flex-center column q-pa-lg">
+      <slot name="empty"/>
+    </div>
+    <div v-else class="q-ma-sm">
       <slot/>
     </div>
     <div class="flex justify-center q-ma-lg">
@@ -39,5 +42,6 @@ watch(() => props.page, (newPage) => {
 onMounted(() => currentPage.value = props.page)
 
 const totalPages = computed(() => props.pagination?.totalPages ?? 1)
+const emptyResult = computed(() => props.pagination?.totalRecords === 0)
 
 </script>

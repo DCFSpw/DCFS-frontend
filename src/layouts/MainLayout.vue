@@ -107,11 +107,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import {onMounted, ref} from 'vue'
 import useAuth from "src/modules/useAuth";
 import ThemeSwitch from "components/ThemeSwitch.vue";
 import {useRoute, useRouter} from "vue-router";
 import useUserSession from "src/modules/useUserSession";
+import useProvider from "src/modules/Provider/useProvider";
 
 const menuList = [
   {
@@ -131,6 +132,12 @@ const menuList = [
     label: 'Volumes',
     route: 'volumes',
     separator: false
+  },
+  {
+    icon: 'fa-solid fa-server',
+    label: 'Disks',
+    route: 'disks',
+    separator: false
   }
 ]
 
@@ -141,4 +148,8 @@ const router = useRouter()
 const route = useRoute()
 const { user } = useUserSession()
 const toggleLeftDrawer = () => leftDrawerOpen.value = !leftDrawerOpen.value
+
+const { getProviders } = useProvider()
+
+onMounted(() => getProviders())
 </script>
