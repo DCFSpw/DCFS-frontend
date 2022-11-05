@@ -79,12 +79,12 @@
           </q-form>
         </q-card-section>
 
-        <q-card-actions align="right" v-if="!isLoading">
+        <q-card-actions align="right" v-if="!isLoading" class="q-pa-md">
           <q-btn label="Cancel" v-close-popup />
           <q-btn color="positive" label="Create" icon="fa-solid fa-plus" @click="() => createVolume(refresh)" v-if="creating"/>
           <q-btn color="primary" label="Update" icon="fa-solid fa-pencil" @click="() => updateVolume(refresh)" v-else/>
         </q-card-actions>
-        <q-card-actions align="center" v-else class="q-mb-sm">
+        <q-card-actions align="center" v-else class="q-mb-sm q-pa-md">
           <q-spinner size="4em" color="primary"/>
         </q-card-actions>
       </q-card>

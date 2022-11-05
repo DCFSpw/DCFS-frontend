@@ -1,16 +1,16 @@
-import volumeApi from "src/api/volumeApi";
 import usePaginatedList from "src/modules/usePaginatedList.js";
+import diskApi from "src/api/diskApi.js";
 
 export default function() {
   const { isLoading, data, page, getData, isEmpty } = usePaginatedList()
 
-  const getVolumes = (cfg = {}) => getData(volumeApi.index, cfg)
+  const getDisks = (cfg = {}) => getData(diskApi.index, cfg)
 
   return {
     isLoading,
     data,
     page,
-    getVolumes,
-    isEmpty
+    isEmpty,
+    getDisks
   }
 }
