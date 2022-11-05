@@ -1,6 +1,7 @@
 import {ref} from "vue";
-import apiConfig from "src/api/apiConfig.js";
 import fileApi from "src/api/fileApi.js";
+
+const BLOCK_UPLOAD_TRIES = 3;
 
 export default function() {
   const isLoading = ref(false)
@@ -16,8 +17,29 @@ export default function() {
     return formData;
   }
 
-  const uploadBlock = (block, key) => {
-    return fileApi.uploadBlock(fileUUID.value, createFormData(block, key));
+  const uploadBlock = async (block, key) => {
+    let isSuccess = false;
+    let tryNumber = 0;
+    let error = null;
+    let result = null;
+
+    if (key === 1) {
+      return
+    }
+
+    do {
+      tryNumber++;
+
+      try {
+        result = await fileApi.uploadBlock(fileUUID.value, createFormData(block, key))
+        isSuccess = true
+      } catch (e) {
+        error = e;
+      }
+    } while (!isSuccess && tryNumber <= BLOCK_UPLOAD_TRIES)
+
+    if (isSuccess) return result
+    else throw error
   }
 
   const createBlocks = async () => {

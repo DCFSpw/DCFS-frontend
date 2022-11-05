@@ -2,9 +2,7 @@
   <div class="main">
     <div
       class="dropzone-container"
-      @dragover="dragOver"
-      @dragleave="dragLeave"
-      @drop="drop"
+      ref="dropZoneRef"
     >
       <input
         type="file"
@@ -17,11 +15,11 @@
         accept=".pdf,.jpg,.jpeg,.png"
       />
 
-      <div v-if="isDragging">
-        Drop to upload
-      </div>
-
       <slot/>
+
+      <div class="absolute-full column flex-center q-inner-loading--dark" v-if="isDragging">
+        <h3>Drop file to upload</h3>
+      </div>
 
       <q-inner-loading :showing="isLoading"/>
     </div>
@@ -32,27 +30,21 @@
 
 import {ref} from "vue";
 import useUploadFile from "src/modules/File/useUploadFile.js";
+import {useDropZone} from "@vueuse/core";
 
 const { isLoading, upload } = useUploadFile()
 
-const isDragging = ref(false)
 const files = ref([])
 const fileRef = ref(null)
+const dropZoneRef = ref(null)
 
 const onChange = () => files.value = [...fileRef.value.files]
-const dragOver = (e) => {
-  e.preventDefault()
-  isDragging.value = true
-}
-const dragLeave = () => isDragging.value = false
-const drop = (e) => {
-  e.preventDefault()
-  fileRef.value.files = e.dataTransfer.files
-  onChange()
-  isDragging.value = false
-  upload(fileRef.value.files.item(0))
+
+const onDrop = (files) => {
+  upload(files[0])
 }
 
+const { isOverDropZone: isDragging } = useDropZone(dropZoneRef, onDrop)
 
 </script>
 
