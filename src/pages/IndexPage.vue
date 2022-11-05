@@ -1,17 +1,13 @@
 <template>
-  <q-page class="flex flex-center">
-    <img
-      alt="Quasar logo"
-      src="~assets/quasar-logo-vertical.svg"
-      style="width: 200px; height: 200px"
-    >
+  <q-page class="full-width">
+    <drop-zone>
+      <div class="window-height full-width" style="background-color: red;">
+        Siema
+      </div>
+    </drop-zone>
   </q-page>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
-
-export default defineComponent({
-  name: 'IndexPage'
-})
+<script setup>
+import DropZone from "components/File/DropZone.vue";
 </script>
