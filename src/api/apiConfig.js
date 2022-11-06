@@ -27,17 +27,25 @@ AxiosInstance.interceptors.request.use(
   }
 )
 
+const getResponseData = (response) => {
+  const {
+    data: { data },
+  } = response;
+  return data ?? response.data;
+}
+
 AxiosInstance.interceptors.response.use(
   response => {
     // if (response.config.responseType === RESPONSE_TYPES.ARRAYBUFFER) return response.data;
     // if (response.data.type === RESPONSE_TYPES.PDF) return response;
     // For now
-    const {
-      data: { data },
-    } = response;
-    return data ?? response.data;
+    return getResponseData(response)
   },
   async (error) => {
+    if (error.config.hasOwnProperty('throwException') && error.config.throwException === false) {
+      return { ...getResponseData(error.response), status: error.response.status}
+    }
+
     const errMsg = error.response.data?.message ?? 'Unknown error occurred. Please try again later.'
     const httpCode = error.response.status
     const code = error.response.data?.code ?? '-'
@@ -56,7 +64,6 @@ AxiosInstance.interceptors.response.use(
       message: errMsg
     })
 
-    console.log(error);
     throw error
   }
 )
