@@ -1,14 +1,17 @@
 import {ref} from "vue";
 import fileApi from "src/api/fileApi.js";
+import {useQuasar} from "quasar";
 
 const BLOCK_UPLOAD_TRIES = 3;
+const RETRY_UPLOAD_HTTP_CODE = 449;
 
 export default function() {
   const isLoading = ref(false)
   const blocks = ref([])
   const file = ref(null)
   const fileUUID = ref('')
-  const volumeUUID = ref('2a0a6bd7-5845-11ed-9cd6-00ffb2e7fe76')
+  const volume = ref(null)
+  const $q = useQuasar()
 
   const createFormData = (block, key) => {
     const formData = new FormData;
@@ -22,10 +25,6 @@ export default function() {
     let tryNumber = 0;
     let error = null;
     let result = null;
-
-    if (key === 1) {
-      return
-    }
 
     do {
       tryNumber++;
@@ -70,7 +69,7 @@ export default function() {
 
   const initUpload = async () => {
     return fileApi.initUpload({
-      volumeUUID: volumeUUID.value,
+      volumeUUID: volume.value.uuid,
       rootUUID: null,
       file: {
         name: file.value.name,
@@ -80,23 +79,48 @@ export default function() {
     })
   }
 
-  const uploadCompleted = async () => {
-    return fileApi.completeUpload(fileUUID.value)
+  const uploadCompleted = async (throwException = true) => {
+    return fileApi.completeUpload(fileUUID.value, throwException)
+  }
+
+  const uploadBlocks = async (blocksToUpload = null) => {
+    const promises = blocks.value
+      .filter((block) => {
+        if (blocksToUpload === null) return true;
+        return !!blocksToUpload.find(blockToUpload => blockToUpload.UUID === block.uuid);
+      })
+      .map((block, key) => uploadBlock(block, key))
+    await Promise.all(promises)
   }
 
   const upload = async (fileToUpload) => {
-    file.value = fileToUpload
-    await createBlocks();
+    if (!volume.value)
+      return;
 
     isLoading.value = true;
-    const start = Date.now();
-    const promises = blocks.value.map((block, key) => uploadBlock(block, key))
-    await Promise.all(promises)
-    await uploadCompleted()
-    isLoading.value = false
+
+    try {
+      file.value = fileToUpload
+      await createBlocks();
+      await uploadBlocks();
+
+      const result = await uploadCompleted(false)
+
+      // If some blocks were not uploaded successfully, retry to upload them
+      if (result.status === RETRY_UPLOAD_HTTP_CODE) {
+        const blocksToRetry = result.Blocks;
+        await uploadBlocks(blocksToRetry);
+        await uploadCompleted()
+      }
+
+      $q.notify({ type: 'positive', message: 'File uploaded' })
+    } finally {
+      isLoading.value = false
+    }
   }
 
   return {
+    volume,
     isLoading,
     upload
   }

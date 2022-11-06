@@ -1,8 +1,8 @@
 <template>
   <q-page class="full-width">
     <drop-zone>
-      <div class="window-height full-width" style="background-color: red;">
-        Siema
+      <div class="window-height full-width">
+        Here will be file explorer. Drag and drop file to upload
       </div>
     </drop-zone>
   </q-page>
