@@ -22,7 +22,11 @@ const goPath = (newRoot) => {
 
 <style scoped lang="scss">
 .breadcrumbs-wrapper {
-  background-color: var(--q-dark);
   border-radius: 5px;
+  background-color: darken(white, 5);
+}
+
+.body--dark .breadcrumbs-wrapper {
+  background-color: var(--q-dark);
 }
 </style>

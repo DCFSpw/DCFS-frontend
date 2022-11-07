@@ -8,6 +8,7 @@ const root = ref('')
 const path = ref([])
 const files = ref([])
 const isLoading = ref(false)
+const selected = ref({})
 
 export default function() {
   const route = useRoute()
@@ -57,9 +58,41 @@ export default function() {
     await getFiles()
   }
 
+  const updateFile = async (file, data) => {
+    isLoading.value = true
+    try {
+      await fileApi.update(file.uuid, { ...data, rootUUID: root.value?.uuid ?? null })
+      await getFiles()
+    } finally {
+      isLoading.value = false
+    }
+
+  }
+
+  const deleteFile = async (file) => {
+    isLoading.value = true
+    try {
+      await fileApi.delete(file.uuid)
+      await getFiles()
+    } finally {
+      isLoading.value = false
+    }
+  }
+
+  const createDirectory = async (data) => {
+    isLoading.value = true
+    try {
+      await fileApi.create({ ...data, volumeUUID: volume.value.uuid, rootUuid: root.value?.uuid ?? null })
+      await getFiles()
+    } finally {
+      isLoading.value = false
+    }
+  }
+
   watch(route, async (newValue) => {
+    if (route.name !== 'dashboard') return
+
     if (newValue.query.volumeUuid !== volume.value.uuid || newValue.query.rootUuid !== root.value?.uuid) {
-      console.log('changes')
       if (newValue.query.volumeUuid !== volume.value.uuid)
         volume.value = await getVolume(newValue.query.volumeUuid)
 
@@ -74,9 +107,14 @@ export default function() {
     volume,
     root,
     files,
+    isLoading,
     initVolume,
     getFiles,
     setQueryParams,
     moveFile,
+    selected,
+    deleteFile,
+    updateFile,
+    createDirectory,
   }
 }
