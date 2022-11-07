@@ -23,15 +23,16 @@
 
 <script setup>
 import useVolumeSelectList from "src/modules/Volume/useVolumeSelectList.js";
-import {onMounted} from "vue";
+import {onMounted, watch} from "vue";
 import VolumeSelectItem from "components/Volume/VolumeSelectItem.vue";
 import useExplorer from "src/modules/File/useExplorer.js";
 
 const { isLoading, data, loadVolumes, getVolume, initialLoadVolumes } = useVolumeSelectList()
-const { volume, initVolume } = useExplorer()
-
+const { volume, initVolume, setQueryParams } = useExplorer()
 
 onMounted(() => initVolume(initialLoadVolumes, getVolume, data))
+
+watch(volume, () => setQueryParams())
 
 </script>
 

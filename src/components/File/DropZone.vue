@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div
-      class="dropzone-container"
+      class="dropzone-container relative-position"
       @dragenter="onDragEnter"
       @dragover="onDragOver"
       @dragleave="onDragLeave"

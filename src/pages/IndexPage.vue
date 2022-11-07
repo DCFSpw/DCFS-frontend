@@ -1,8 +1,6 @@
 <template>
   <drop-zone>
-    <q-page class="q-pa-lg">
-      <file-explorer/>
-    </q-page>
+    <file-explorer/>
   </drop-zone>
 </template>
 
