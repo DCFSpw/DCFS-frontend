@@ -1,32 +1,43 @@
 <template>
   <div
     draggable="true"
-    class="q-ma-sm q-pa-lg flex column justify-center items-center file-block"
-    :class="{ selected }"
+    class="q-ma-sm q-pa-md flex column justify-center items-center file-block text-center full-height"
+    :class="{ selected: selected?.uuid === file.uuid }"
     @click="onClick"
     @dblclick="onDoubleClick"
     @dragstart="onDragStart($event, file)"
     @dragover="onDragOver($event, file)"
     @drop="onDrop($event, file)"
+    @contextmenu.prevent="onContextMenu(file)"
+    ref="fileRef"
   >
-    <q-icon :name="file.type === 1 ? 'fa-solid fa-folder' : 'fa-solid fa-file'" size="lg"/>
+    <q-icon :name="getIconForFile(file)" size="lg"/>
     {{ file.name }}
   </div>
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {inject, ref} from "vue";
 import useExplorer from "src/modules/File/useExplorer.js";
+import {getIconForFile} from "src/modules/File/Extesion/helper.js";
 
-const {root, setQueryParams, moveFile} = useExplorer()
+const {root, setQueryParams, moveFile, selected} = useExplorer()
 
 const props = defineProps({
   file: Object
 })
 
-const selected = ref(false)
+import { onClickOutside } from '@vueuse/core'
 
-const onClick = () => selected.value = !selected.value
+const fileRef = ref(null)
+const onClick = () => selected.value = props.file
+
+onClickOutside(fileRef, () => {
+  if (selected.value.uuid === props.file.uuid) {
+    selected.value = {}
+  }
+})
+
 const onDoubleClick = () => {
   if (props.file.type === 1) {
     root.value = props.file;
@@ -36,6 +47,7 @@ const onDoubleClick = () => {
 
 const onDragStart = (e, item) => {
   e.dataTransfer.setData('item', JSON.stringify(item))
+  selected.value = item
 }
 
 const onDragOver = (e, item) => {
@@ -51,7 +63,13 @@ const onDrop = async (e, item) => {
     await moveFile(draggedItem, item.uuid)
   }
 
-  console.log('drop', item)
+
+}
+const emitter = inject('emitter')
+
+const onContextMenu = async (item) => {
+  selected.value = item
+  emitter.emit('dcfs-show', { file: item })
 }
 
 </script>
@@ -65,6 +83,17 @@ const onDrop = async (e, item) => {
 
   &:hover {
     //border: 1px solid rgb(212, 212, 212);
+    background-color: darken(white, 5);
+  }
+
+  &.selected {
+    border: 1px solid rgb(38, 38, 38);
+    background-color: darken(white, 20);
+  }
+}
+
+.body--dark .file-block {
+  &:hover {
     background-color: lighten($dark, 5);
   }
 

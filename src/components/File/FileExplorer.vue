@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <q-page class="q-pa-lg">
     <div class="row full-width">
       <div class="column col-xl-4 col-12">
         <volume-select/>
@@ -8,15 +8,18 @@
         <bread-crumbs/>
       </div>
     </div>
-    <div class="flex full-width full-height q-mt-lg">
-      <div v-for="file in files" :key="file.uuid">
+    <transition-group
+      class="flex full-width full-height q-mt-lg row items-stretch"
+      enter-active-class="animated fadeIn"
+      tag="div"
+    >
+      <div v-for="file in files" :key="file.uuid" class="col-xl-1 col-lg-2 col-md-3 col-sm-6 col-12">
         <file-type :file="file" />
-
-<!--        <directory-type v-if="file.type === 1" :file="file" />
-        <file-type v-else :file="file" />-->
       </div>
-    </div>
-  </div>
+    </transition-group>
+
+    <context-menu/>
+  </q-page>
 </template>
 
 <script setup>
@@ -24,9 +27,14 @@
 import VolumeSelect from "components/File/VolumeSelect.vue";
 import BreadCrumbs from "components/File/BreadCrumbs.vue";
 import useExplorer from "src/modules/File/useExplorer.js";
-import FileType from "components/File/Explorer/FileType.vue";
+import FileType from "components/File/FileType.vue";
+import ContextMenu from "components/File/ContextMenu.vue";
 
 const { isLoading, volume, files} = useExplorer()
+
+const onClick = (event) => {
+  console.log(event)
+}
 
 </script>
 

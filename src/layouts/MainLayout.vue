@@ -86,12 +86,12 @@
         </q-list>
       </q-scroll-area>
 
-      <q-div class="absolute-bottom q-pa-sm" style="font-size: .7em">
+      <div class="absolute-bottom q-pa-sm" style="font-size: .7em">
           <div style="font-size: 1.2em">@Authors</div>
           <div>Tymoteusz Bartnik</div>
           <div>Przemysław Dominikowski</div>
           <div>Bartosz Błachut</div>
-      </q-div>
+      </div>
     </q-drawer>
 
     <q-page-container>

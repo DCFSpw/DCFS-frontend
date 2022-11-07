@@ -12,6 +12,11 @@
 
 import {useStorage} from "@vueuse/core";
 import {useQuasar} from "quasar";
+import {provide} from "vue";
+import mitt from "mitt";
+
+const emitter = mitt();
+provide('emitter', emitter)
 
 const lightTeamOn = useStorage('light-theme', false)
 const $q = useQuasar()
