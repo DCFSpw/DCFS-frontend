@@ -1,6 +1,7 @@
 import {ref} from "vue";
 import fileApi from "src/api/fileApi.js";
 import {useQuasar} from "quasar";
+import useExplorer from "src/modules/File/useExplorer.js";
 
 const BLOCK_UPLOAD_TRIES = 3;
 const RETRY_UPLOAD_HTTP_CODE = 449;
@@ -10,8 +11,9 @@ export default function() {
   const blocks = ref([])
   const file = ref(null)
   const fileUUID = ref('')
-  const volume = ref(null)
   const $q = useQuasar()
+
+  const {volume, root, getFiles} = useExplorer()
 
   const createFormData = (block, key) => {
     const formData = new FormData;
@@ -70,7 +72,7 @@ export default function() {
   const initUpload = async () => {
     return fileApi.initUpload({
       volumeUUID: volume.value.uuid,
-      rootUUID: null,
+      rootUUID: root.value?.uuid,
       file: {
         name: file.value.name,
         type: 2,
@@ -114,6 +116,7 @@ export default function() {
 
       $q.notify({ type: 'positive', message: 'File uploaded' })
     } finally {
+      await getFiles()
       isLoading.value = false
     }
   }
