@@ -2,11 +2,11 @@ import apiConfig from "src/api/apiConfig";
 
 export default {
 
-  initUpload: (data) => apiConfig.post(`/file/request`, data),
+  initUpload: (data) => apiConfig.post(`/files/upload`, data),
   completeUpload: (fileUUID, throwException) => apiConfig.post(
-    `/file/request/complete/${fileUUID}`,
-    { direction: false },
+    `/files/upload/${fileUUID}`,
+    {},
     { throwException }
   ),
-  uploadBlock: (blockUUid, data) => apiConfig.post(`/file/io/${blockUUid}`, data)
+  uploadBlock: (blockUUid, data) => apiConfig.post(`/files/block/${blockUUid}`, data)
 }
