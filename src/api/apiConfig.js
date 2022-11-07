@@ -43,7 +43,7 @@ AxiosInstance.interceptors.response.use(
   },
   async (error) => {
     if (error.config.hasOwnProperty('throwException') && error.config.throwException === false) {
-      return { ...getResponseData(error.response), status: error.response.status}
+      return { data: getResponseData(error.response), status: error.response.status}
     }
 
     const errMsg = error.response.data?.message ?? 'Unknown error occurred. Please try again later.'
