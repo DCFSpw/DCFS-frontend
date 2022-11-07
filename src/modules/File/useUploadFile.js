@@ -16,7 +16,7 @@ export default function() {
   const createFormData = (block, key) => {
     const formData = new FormData;
     formData.set('block', block.data, `${file.value?.name}.part.${key}`);
-    formData.append('blockUUID', block.uuid);
+    formData.append('fileUUID', fileUUID.value);
     return formData;
   }
 
@@ -30,7 +30,7 @@ export default function() {
       tryNumber++;
 
       try {
-        result = await fileApi.uploadBlock(fileUUID.value, createFormData(block, key))
+        result = await fileApi.uploadBlock(block.uuid, createFormData(block, key))
         isSuccess = true
       } catch (e) {
         error = e;
@@ -43,13 +43,13 @@ export default function() {
 
   const createBlocks = async () => {
     const result = await initUpload();
-    fileUUID.value = result.UUID;
+    fileUUID.value = result.file.uuid;
 
     blocks.value = [];
     let i = 0;
     let totalSize = 0
 
-    const resultBlocks = result.Blocks.sort((a, b) => a.Order > b.Order ? 1 : -1)
+    const resultBlocks = result.blocks.sort((a, b) => a.order > b.order ? 1 : -1)
 
     for (const block of resultBlocks) {
       blocks.value = [
@@ -57,12 +57,12 @@ export default function() {
         {
           uuid: block.UUID,
           data: file.value.slice(
-            totalSize, Math.min(totalSize + block.Size, file.value.size), file.value.type
+            totalSize, Math.min(totalSize + block.size, file.value.size), file.value.type
           )
         }
       ]
 
-      totalSize += block.Size
+      totalSize += block.size
       i++;
     }
   }
@@ -73,7 +73,7 @@ export default function() {
       rootUUID: null,
       file: {
         name: file.value.name,
-        type: 1,
+        type: 2,
         size: file.value.size
       }
     })
@@ -108,8 +108,7 @@ export default function() {
 
       // If some blocks were not uploaded successfully, retry to upload them
       if (result.status === RETRY_UPLOAD_HTTP_CODE) {
-        const blocksToRetry = result.Blocks;
-        await uploadBlocks(blocksToRetry);
+        await uploadBlocks(result.data);
         await uploadCompleted()
       }
 
