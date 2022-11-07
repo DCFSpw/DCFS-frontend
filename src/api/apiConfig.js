@@ -4,7 +4,7 @@ import {Notify} from "quasar";
 import {ErrorCodeEnum, getJwtErrorCodes} from "src/api/errorCodeEnum";
 const AxiosInstance = axios.create({
   baseURL: process.env.VUE_APP_API_URL,
-  timeout: 10000,
+  timeout: 3600_000,
   maxBodyLength: 5000,
   maxContentLength: 5000,
 
