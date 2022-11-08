@@ -11,7 +11,7 @@
     @contextmenu.prevent="onContextMenu(file)"
     ref="fileRef"
   >
-    <q-icon :name="getIconForFile(file)" size="lg"/>
+    <q-icon :name="getIconForFile(file)" :color="file.type === 1 ? 'primary' : ''" size="lg"/>
     {{ file.name }}
   </div>
 </template>
@@ -21,7 +21,7 @@ import {inject, ref} from "vue";
 import useExplorer from "src/modules/File/useExplorer.js";
 import {getIconForFile} from "src/modules/File/Extesion/helper.js";
 
-const {root, setQueryParams, moveFile, selected} = useExplorer()
+const { moveFile, selected, goPath } = useExplorer()
 
 const props = defineProps({
   file: Object
@@ -40,8 +40,7 @@ onClickOutside(fileRef, () => {
 
 const onDoubleClick = () => {
   if (props.file.type === 1) {
-    root.value = props.file;
-    setQueryParams()
+    goPath(props.file)
   }
 }
 
