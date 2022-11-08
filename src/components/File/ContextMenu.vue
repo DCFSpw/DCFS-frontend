@@ -21,7 +21,7 @@
         <q-item-section>Refresh</q-item-section>
       </q-item>
 
-      <q-item clickable v-close-popup>
+      <q-item clickable v-close-popup @click="clickUpload">
         <q-item-section>Upload</q-item-section>
       </q-item>
 
@@ -70,7 +70,7 @@ import useExplorer from "src/modules/File/useExplorer.js";
 import FileUpdateDialog from "components/File/FileUpdateDialog.vue";
 import DirectoryCreateDialog from "components/File/DirectoryCreateDialog.vue";
 
-const { isLoading, deleteFile, selected, getFiles } = useExplorer()
+const { isLoading, deleteFile, selected, getFiles, uploadFileRef } = useExplorer()
 
 const emitter = inject('emitter')
 const menuRef = ref(null)
@@ -93,6 +93,8 @@ const onHide = () => data.value = {}
 const onShow = () => {
   if (!data.value.file && selected.value) selected.value = {}
 }
+
+const clickUpload = () => uploadFileRef.value.click()
 
 </script>
 

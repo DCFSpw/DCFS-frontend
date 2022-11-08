@@ -1,7 +1,6 @@
-import {ref, watch} from "vue";
+import {ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import fileApi from "src/api/fileApi.js";
-import useVolumeList from "src/modules/Volume/useVolumeList.js";
 
 const volume = ref('')
 const root = ref('')
@@ -9,12 +8,22 @@ const path = ref([])
 const files = ref([])
 const isLoading = ref(false)
 const selected = ref({})
+const uploadFileRef = ref(null)
 
 export default function() {
   const route = useRoute()
   const router = useRouter()
 
-  const { getVolume } = useVolumeList()
+  const setRootFromApi = async () => {
+    if (route.query.rootUuid) {
+      const result = await fileApi.show(route.query.rootUuid)
+      root.value = result.file
+      path.value = result.path.reverse()
+    } else {
+      root.value = ''
+      path.value = []
+    }
+  }
 
   const initVolume = async (initialLoadVolumes, getVolume, data) => {
     await initialLoadVolumes()
@@ -24,7 +33,7 @@ export default function() {
       await setQueryParams()
     } else {
       volume.value = await getVolume(route.query.volumeUuid)
-      root.value = route.query.rootUuid ? await fileApi.show(route.query.rootUuid) : null
+      await setRootFromApi()
     }
 
     await getFiles()
@@ -82,29 +91,37 @@ export default function() {
   const createDirectory = async (data) => {
     isLoading.value = true
     try {
-      await fileApi.create({ ...data, volumeUUID: volume.value.uuid, rootUuid: root.value?.uuid ?? null })
+      await fileApi.create({...data, volumeUUID: volume.value.uuid, rootUuid: root.value?.uuid ?? null})
       await getFiles()
     } finally {
       isLoading.value = false
     }
   }
 
-  watch(route, async (newValue) => {
-    if (route.name !== 'dashboard') return
+  const goPath = async (newRoot) => {
+    if (!newRoot) {
+      root.value = ''
+      path.value = []
+    } else if (newRoot.uuid !== root.value.uuid) {
+      if (root.value) {
+        const existingKey = Object.keys(path.value).find(key => path.value[key].uuid === newRoot.uuid)
 
-    if (newValue.query.volumeUuid !== volume.value.uuid || newValue.query.rootUuid !== root.value?.uuid) {
-      if (newValue.query.volumeUuid !== volume.value.uuid)
-        volume.value = await getVolume(newValue.query.volumeUuid)
+        if (!existingKey) {
+          path.value = [...path.value, root.value]
+        } else {
+          path.value = path.value.slice(0, parseInt(existingKey))
+        }
+      }
 
-      if (newValue.query.rootUuid !== root.value?.uuid)
-        root.value = route.query.rootUuid ? await fileApi.show(route.query.rootUuid) : null
-
-      await getFiles()
+      root.value = newRoot
     }
-  })
+
+    await setQueryParams()
+  }
 
   return {
     volume,
+    path,
     root,
     files,
     isLoading,
@@ -116,5 +133,8 @@ export default function() {
     deleteFile,
     updateFile,
     createDirectory,
+    goPath,
+    setRootFromApi,
+    uploadFileRef,
   }
 }
