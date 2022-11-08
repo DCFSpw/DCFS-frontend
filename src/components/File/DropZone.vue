@@ -14,7 +14,7 @@
         id="fileInput"
         class="hidden-input"
         @change="onChange"
-        ref="fileRef"
+        ref="uploadFileRef"
         accept=".pdf,.jpg,.jpeg,.png"
       />
 
@@ -33,13 +33,16 @@
 
 import {ref} from "vue";
 import useUploadFile from "src/modules/File/useUploadFile.js";
+import useExplorer from "src/modules/File/useExplorer.js";
 
 const { isLoading, upload, volume } = useUploadFile()
+const { uploadFileRef } = useExplorer()
 
-const files = ref([])
-const fileRef = ref(null)
-
-const onChange = () => files.value = [...fileRef.value.files]
+const onChange = () => {
+  if (uploadFileRef.value.files.length) {
+    upload(uploadFileRef.value.files[0])
+  }
+}
 
 const counter = ref(0)
 const isOverDropZone = ref(false)

@@ -20,6 +20,7 @@
                   filled
                   v-model="data.name"
                   label="Name"
+                  ref="inputRef"
                   lazy-rules
                   :rules="[
                     $rules.required('Name is required'),
@@ -45,7 +46,7 @@
 </template>
 
 <script setup>
-import {onMounted, ref, watch} from "vue";
+import {nextTick, onMounted, ref, watch} from "vue";
 import useExplorer from "src/modules/File/useExplorer.js";
 
 const props = defineProps({
@@ -56,7 +57,12 @@ const props = defineProps({
 const data = ref({})
 const { isLoading, updateFile } = useExplorer()
 const showing = ref(false)
-const showDialog = () => showing.value = true
+const inputRef = ref(null)
+
+const showDialog = () => {
+  showing.value = true
+  nextTick(() => inputRef.value.$el.focus())
+}
 
 onMounted(() => data.value = { ...props.file })
 
