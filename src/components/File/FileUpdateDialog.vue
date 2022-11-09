@@ -3,7 +3,7 @@
     <slot :on="showDialog"/>
 
     <q-dialog v-model="showing">
-      <q-card style="width: 700px; max-width: 80vw;">
+      <q-card style="width: 400px; max-width: 80vw;">
         <q-card-section>
           <div class="text-h6">Editing file</div>
         </q-card-section>
@@ -31,11 +31,9 @@
           </q-form>
         </q-card-section>
 
-        <q-card-actions align="between" v-if="!isLoading" class="q-pa-md">
-          <div>
-            <q-btn label="Cancel" v-close-popup class="q-mr-sm"/>
-            <q-btn color="primary" label="Update" icon="fa-solid fa-pencil" @click="() => updateFile(file, data)"/>
-          </div>
+        <q-card-actions align="right" v-if="!isLoading" class="q-pa-md">
+          <q-btn label="Cancel" v-close-popup class="q-mr-sm"/>
+          <q-btn color="primary" label="Update" icon="fa-solid fa-pencil" @click="() => updateFile(file, data)"/>
         </q-card-actions>
         <q-card-actions align="center" v-else class="q-mb-sm q-pa-md">
           <q-spinner size="4em" color="primary"/>

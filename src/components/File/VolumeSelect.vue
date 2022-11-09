@@ -1,5 +1,5 @@
 <template>
-  <div class="q-px-lg">
+  <div class="q-px-sm">
     <q-select
       :options="data"
       filled
