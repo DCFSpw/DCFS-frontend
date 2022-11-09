@@ -10,6 +10,7 @@ const isLoading = ref(false)
 const selected = ref({})
 const uploadFileRef = ref(null)
 const search = ref('')
+const refreshing = ref(false)
 
 export default function() {
   const route = useRoute()
@@ -40,12 +41,18 @@ export default function() {
     await getFiles()
   }
 
-  const getFiles = async () => {
+  const getFiles = async (fakeLoader = false) => {
+    if (refreshing.value) return
+    refreshing.value = true
     isLoading.value = true;
     try {
       files.value = await fileApi.index({ volumeUUID: volume.value.uuid, rootUUID: root.value?.uuid })
     } finally {
       isLoading.value = false
+
+      fakeLoader
+        ? setTimeout(() => refreshing.value = false, 300)
+        : refreshing.value = false
     }
   }
 
@@ -138,5 +145,6 @@ export default function() {
     setRootFromApi,
     uploadFileRef,
     search,
+    refreshing,
   }
 }
