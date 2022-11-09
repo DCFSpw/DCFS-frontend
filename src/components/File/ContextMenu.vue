@@ -17,7 +17,7 @@
         </q-item>
       </directory-create-dialog>
 
-      <q-item clickable v-close-popup @click="getFiles">
+      <q-item clickable v-close-popup @click="getFiles(true)">
         <q-item-section>Refresh</q-item-section>
       </q-item>
 
