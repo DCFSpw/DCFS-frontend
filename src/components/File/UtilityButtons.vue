@@ -7,7 +7,7 @@
         Go up a directory
       </q-tooltip>
     </div>
-    <div class="utility-btn" :class="{ disabled: refreshing }" @click="refresh">
+    <div class="utility-btn" :class="{ disabled: refreshing }" @click="getFiles(true)">
       <q-icon name="fa-solid fa-refresh" :class="{ spinning: refreshing }"/>
 
       <q-tooltip>
@@ -20,19 +20,8 @@
 <script setup>
 
 import useExplorer from "src/modules/File/useExplorer.js";
-import {ref} from "vue";
 
-const {root, goPath, path, getFiles} = useExplorer()
-
-const refreshing = ref(false)
-
-const refresh = async () => {
-  if (refreshing.value) return
-
-  refreshing.value = true
-  await getFiles()
-  setTimeout(() => refreshing.value = false, 500)
-}
+const {root, goPath, path, getFiles, refreshing} = useExplorer()
 
 const goUp = () => {
   path.value.length
