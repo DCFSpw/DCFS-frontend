@@ -23,25 +23,22 @@
       <div class="absolute-full column flex-center q-inner-loading--dark" v-if="isOverDropZone">
         <h3>Drop file to upload</h3>
       </div>
-
-      <q-inner-loading :showing="isLoading" label="Uploading..."/>
     </div>
   </div>
 </template>
 
 <script setup>
 
-import {ref} from "vue";
+import {onBeforeMount, onMounted, ref} from "vue";
 import useUploadFile from "src/modules/File/useUploadFile.js";
 import useExplorer from "src/modules/File/useExplorer.js";
 
-const { isLoading, upload, volume } = useUploadFile()
+const { isLoading, upload, volume, uploadingFiles } = useUploadFile()
 const { uploadFileRef } = useExplorer()
 
 const onChange = () => {
-  if (uploadFileRef.value.files.length) {
-    upload(uploadFileRef.value.files[0])
-  }
+  if (uploadFileRef.value.files.length)
+    Array.from(uploadFileRef.value.files).forEach((file) => upload(file))
 }
 
 const counter = ref(0)
@@ -73,8 +70,23 @@ const onDrop = (e) => {
   counter.value = 0
   isOverDropZone.value = false
   const files = Array.from(e.dataTransfer?.files ?? [])
-  if (files.length) upload(files[0])
+  if (files.length) {
+    files.forEach((file) => upload(file))
+  }
 }
+
+const onWindowLeave = (e) => {
+  if (
+    Object.values(uploadingFiles.value).length
+    && !window.confirm('Do you really want to leave? you have unsaved changes!')
+  ) {
+    e.preventDefault()
+    e.returnValue = ''
+  }
+}
+
+onMounted(() => window.addEventListener('beforeunload', onWindowLeave))
+onBeforeMount(() => window.removeEventListener('beforeunload', onWindowLeave))
 
 </script>
 

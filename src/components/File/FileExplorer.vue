@@ -1,11 +1,14 @@
 <template>
   <q-page class="q-pa-lg">
     <div class="row full-width">
-      <div class="column col-xl-4 col-12">
-        <volume-select/>
+      <div class="column col-xl-1 col-12">
+        <utility-buttons/>
       </div>
       <div class="column col-xl-8 col-12">
         <bread-crumbs/>
+      </div>
+      <div class="column col-xl-3 col-12">
+        <volume-select/>
       </div>
     </div>
     <transition-group
@@ -13,7 +16,7 @@
       enter-active-class="animated fadeIn"
       tag="div"
     >
-      <div v-for="file in sortedFiles" :key="file.uuid" class="col-xl-1 col-lg-2 col-md-3 col-sm-6 col-12">
+      <div v-for="file in computedFiles" :key="file.uuid" class="col-xl-1 col-lg-2 col-md-3 col-sm-6 col-12">
         <file-type :file="file" />
       </div>
     </transition-group>
@@ -32,14 +35,31 @@ import ContextMenu from "components/File/ContextMenu.vue";
 import {computed, watch} from "vue";
 import {useRoute} from "vue-router";
 import useVolumeSelectList from "src/modules/Volume/useVolumeSelectList.js";
+import useUploadFile from "src/modules/File/useUploadFile.js";
+import UtilityButtons from "components/File/UtilityButtons.vue";
 
-const { isLoading, volume, files, getFiles, setRootFromApi, root } = useExplorer()
+const { isLoading, volume, files, getFiles, setRootFromApi, root, search } = useExplorer()
+const { uploadingFiles } = useUploadFile()
 const { getVolume } = useVolumeSelectList()
 
 const route = useRoute()
 
-const sortedFiles = computed(() => [...files.value].sort((a, b) => a.type > b.type ? 1 : -1))
+const computedFiles = computed(() => {
+  let newFiles = [...files.value]
 
+  const rootUuid = root.value.uuid ?? 0;
+  const volumeUuid = volume.value.uuid
+
+  if (uploadingFiles.value[volumeUuid] && uploadingFiles.value[volumeUuid][rootUuid])
+    newFiles = [...newFiles, ...Object.values(uploadingFiles.value[volumeUuid][rootUuid])]
+
+  if (search.value !== '')
+    newFiles = newFiles.filter(file => file.name.toLowerCase().includes(search.value.toLowerCase()))
+
+  return newFiles.sort((a, b) => a.type > b.type ? 1 : -1)
+})
+
+// Handle route changing for example when going back in browser
 watch(route, async (route) => {
   if (route.name !== 'dashboard') return
 
