@@ -28,7 +28,7 @@
       <q-separator />
 
       <file-update-dialog
-        v-if="data.file"
+        v-if="data.file && !data.file.isUploading"
         v-slot="{ on }"
         :file="data.file"
         :callback="close"
@@ -39,7 +39,7 @@
       </file-update-dialog>
 
       <confirmation-dialog
-        v-if="data.file"
+        v-if="data.file && !data.file.isUploading"
         v-slot="{ on }"
         :callback="() => runAndClose(() => deleteFile(data.file))"
         :with-progress="true"
@@ -52,7 +52,7 @@
         </q-item>
       </confirmation-dialog>
 
-      <q-separator v-if="data.file"/>
+      <q-separator v-if="data.file && !data.file.isUploading"/>
 
       <q-item clickable v-close-popup>
         <q-item-section>Cancel</q-item-section>

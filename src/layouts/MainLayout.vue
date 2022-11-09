@@ -103,6 +103,8 @@
         <router-view />
       </transition>
     </q-page-container>
+
+    <upload-progress/>
   </q-layout>
 </template>
 
@@ -113,6 +115,7 @@ import ThemeSwitch from "components/ThemeSwitch.vue";
 import {useRoute, useRouter} from "vue-router";
 import useUserSession from "src/modules/useUserSession";
 import useProvider from "src/modules/Provider/useProvider";
+import UploadProgress from "components/File/UploadProgress.vue";
 
 const menuList = [
   {

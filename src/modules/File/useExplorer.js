@@ -9,6 +9,7 @@ const files = ref([])
 const isLoading = ref(false)
 const selected = ref({})
 const uploadFileRef = ref(null)
+const search = ref('')
 
 export default function() {
   const route = useRoute()
@@ -75,7 +76,6 @@ export default function() {
     } finally {
       isLoading.value = false
     }
-
   }
 
   const deleteFile = async (file) => {
@@ -116,6 +116,7 @@ export default function() {
       root.value = newRoot
     }
 
+    selected.value = {}
     await setQueryParams()
   }
 
@@ -136,5 +137,6 @@ export default function() {
     goPath,
     setRootFromApi,
     uploadFileRef,
+    search,
   }
 }

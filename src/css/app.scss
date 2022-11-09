@@ -41,3 +41,19 @@
 .q-notifications__list--top {
   top: 50px;
 }
+
+.small-input {
+  .q-field, .q-field__control, .q-field__append {
+    height: 25px;
+  }
+}
+
+.explorer-nav {
+  border-radius: 5px;
+  background-color: darken(white, 5);
+  height: 58px;
+}
+
+.body--dark .explorer-nav {
+  background-color: var(--q-dark);
+}

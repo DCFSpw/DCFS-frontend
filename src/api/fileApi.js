@@ -7,11 +7,11 @@ export default {
   update: (fileUuid,  data) => apiConfig.put(`/files/manage/${fileUuid}`, data),
   delete: (fileUuid) => apiConfig.delete(`/files/manage/${fileUuid}`),
 
-  initUpload: (data) => apiConfig.post(`/files/upload`, data),
+  initUpload: (data) => apiConfig.post(`/files/upload`, data, { lowPriority: true }),
   completeUpload: (fileUUID, throwException) => apiConfig.post(
     `/files/upload/${fileUUID}`,
     {},
-    { throwException }
+    { throwException, lowPriority: true }
   ),
-  uploadBlock: (blockUUid, data) => apiConfig.post(`/files/block/${blockUUid}`, data)
+  uploadBlock: (blockUUid, data) => apiConfig.post(`/files/block/${blockUUid}`, data, { lowPriority: true })
 }

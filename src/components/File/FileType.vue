@@ -1,18 +1,31 @@
 <template>
   <div
-    draggable="true"
-    class="q-ma-sm q-pa-md flex column justify-center items-center file-block text-center full-height"
+    :draggable="!file.isUploading"
+    class="q-ma-sm q-pa-md flex column justify-center items-center file-block text-center full-height relative-position"
     :class="{ selected: selected?.uuid === file.uuid }"
     @click="onClick"
     @dblclick="onDoubleClick"
     @dragstart="onDragStart($event, file)"
-    @dragover="onDragOver($event, file)"
     @drop="onDrop($event, file)"
     @contextmenu.prevent="onContextMenu(file)"
     ref="fileRef"
   >
     <q-icon :name="getIconForFile(file)" :color="file.type === 1 ? 'primary' : ''" size="lg"/>
-    {{ file.name }}
+    <div style="overflow: auto; max-width: 100%;">{{ file.name }}</div>
+
+    <q-inner-loading :showing="file.isUploading">
+      <q-circular-progress
+        indeterminate
+        show-value
+        font-size="16px"
+        class="text-primary q-ma-md"
+        size="60px"
+        :thickness="0.1"
+        color="primary"
+      >
+        <q-icon name="fa-solid fa-cloud-arrow-up" class="q-mr-xs" />
+      </q-circular-progress>
+    </q-inner-loading>
   </div>
 </template>
 
@@ -33,15 +46,13 @@ const fileRef = ref(null)
 const onClick = () => selected.value = props.file
 
 onClickOutside(fileRef, () => {
-  if (selected.value.uuid === props.file.uuid) {
+  if (selected.value.uuid === props.file.uuid)
     selected.value = {}
-  }
 })
 
 const onDoubleClick = () => {
-  if (props.file.type === 1) {
+  if (props.file.type === 1)
     goPath(props.file)
-  }
 }
 
 const onDragStart = (e, item) => {
@@ -49,21 +60,15 @@ const onDragStart = (e, item) => {
   selected.value = item
 }
 
-const onDragOver = (e, item) => {
-  //console.log(e.dataTransfer.items[0])
-  //console.log('drag over', item)
-}
-
 const onDrop = async (e, item) => {
   e.preventDefault()
   const draggedItem = JSON.parse(e.dataTransfer.getData('item'))
 
-  if (item.type === 1) {
+  if (item.uuid !== draggedItem.uuid && item.type === 1) {
     await moveFile(draggedItem, item.uuid)
   }
-
-
 }
+
 const emitter = inject('emitter')
 
 const onContextMenu = async (item) => {
@@ -81,13 +86,16 @@ const onContextMenu = async (item) => {
   border-radius: 5px;
 
   &:hover {
-    //border: 1px solid rgb(212, 212, 212);
     background-color: darken(white, 5);
   }
 
   &.selected {
     border: 1px solid rgb(38, 38, 38);
     background-color: darken(white, 20);
+  }
+
+  .q-inner-loading--dark {
+    background-color: rgba($dark-page, 80%);
   }
 }
 
