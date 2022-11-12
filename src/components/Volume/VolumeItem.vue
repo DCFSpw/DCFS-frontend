@@ -52,6 +52,7 @@ import BoolCheck from "components/BoolCheck.vue";
 import ConfirmationDialog from "components/ConfirmationDialog.vue";
 import useVolumeDelete from "src/modules/Volume/useVolumeDelete";
 import VolumeForm from "components/Volume/VolumeForm.vue";
+import {FILE_PARTITION_TRANS} from "src/modules/Volume/volumeConst.js";
 
 const props = defineProps({
   volume: Object,
@@ -69,7 +70,7 @@ const settings = computed(() => [
   },
   {
     name: 'File partition',
-    value: props.volume.settings.filePartition === 1 ? 'Balanced' : 'Priority'
+    value: FILE_PARTITION_TRANS[props.volume.settings.filePartition]
   }
 ]);
 

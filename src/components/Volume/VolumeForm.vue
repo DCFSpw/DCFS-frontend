@@ -96,6 +96,7 @@
 
 import {onMounted, ref, watch} from "vue";
 import useVolumeManage from "src/modules/Volume/useVolumeManage";
+import {FILE_PARTITION, FILE_PARTITION_TRANS} from "src/modules/Volume/volumeConst.js";
 
 const props = defineProps({
   volume: {
@@ -149,12 +150,16 @@ const encryptionOptions = [
 
 const filePartitionOptions = [
   {
-    label: 'Balanced',
-    value: 1,
+    label: FILE_PARTITION_TRANS[FILE_PARTITION.BALANCED],
+    value: FILE_PARTITION.BALANCED,
   },
   {
-    label: 'Priority',
-    value: 2,
+    label: FILE_PARTITION_TRANS[FILE_PARTITION.PRIORITY],
+    value: FILE_PARTITION.PRIORITY,
+  },
+  {
+    label: FILE_PARTITION_TRANS[FILE_PARTITION.THROUGHPUT],
+    value: FILE_PARTITION.THROUGHPUT,
   },
 ]
 

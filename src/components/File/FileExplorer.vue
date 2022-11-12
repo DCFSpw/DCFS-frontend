@@ -1,17 +1,19 @@
 <template>
   <q-page class="q-pa-lg">
-    <div class="row full-width">
-      <div class="column col-xl-1 col-12">
+    <div class="row full-width q-col-gutter-y-md">
+      <div class="column col-xl-1 col-sm-4 col-12">
         <utility-buttons/>
       </div>
-      <div class="column col-xl-8 col-12">
+      <div class="column col-xl-8 col-sm-8 col-12">
         <bread-crumbs/>
       </div>
       <div class="column col-xl-3 col-12">
         <volume-select/>
       </div>
     </div>
+
     <transition-group
+      v-if="computedFiles.length"
       class="flex full-width full-height q-mt-lg row items-stretch"
       enter-active-class="animated fadeIn"
       tag="div"
@@ -20,6 +22,9 @@
         <file-type :file="file" />
       </div>
     </transition-group>
+    <div class="text-center q-mt-lg" v-else>
+      <span class="text-h6">{{ noFileMsg }}</span>
+    </div>
 
     <context-menu/>
   </q-page>
@@ -43,6 +48,12 @@ const { uploadingFiles } = useUploadFile()
 const { getVolume } = useVolumeSelectList()
 
 const route = useRoute()
+
+const noFileMsg = computed(() => {
+  if (!volume.value) return 'No volumes found. Please go to `Volumes` tab to create your first volume.'
+  if (search.value !== '' && files.value.length) return 'No files matching the filter criteria'
+  return 'No files found'
+})
 
 const computedFiles = computed(() => {
   let newFiles = [...files.value]

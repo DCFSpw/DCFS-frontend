@@ -10,7 +10,7 @@ export default function() {
 
   const makeAction = async (refresh, action) => {
     if (!await form.value.validate()) {
-      return
+      return false
     }
 
     isLoading.value = true;
@@ -18,20 +18,22 @@ export default function() {
     try {
       await action(data.value)
       await refresh()
+      return true
     } finally {
       isLoading.value = false
     }
   }
 
   const updateVolume = async (refresh) => {
-    await makeAction(refresh, (data) => volumeApi.update(data.uuid, data))
-    $q.notify({ type: 'positive', message: 'Volume has been updated' })
+    if (await makeAction(refresh, (data) => volumeApi.update(data.uuid, data)))
+      $q.notify({ type: 'positive', message: 'Volume has been updated' })
   }
 
   const createVolume = async (refresh) => {
-    await makeAction(() => refresh({ toLastPage: true }), (data) => volumeApi.create(data))
-    data.value = {settings: {}}
-    $q.notify({ type: 'positive', message: 'Volume has been created' })
+    if (await makeAction(() => refresh({ toLastPage: true }), (data) => volumeApi.create(data))) {
+      data.value = {settings: {}}
+      $q.notify({ type: 'positive', message: 'Volume has been created' })
+    }
   }
 
   return {
