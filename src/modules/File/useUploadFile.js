@@ -82,7 +82,7 @@ export default function() {
 
     for (const block of resultBlocks) {
       blocks.push({
-        uuid: block.UUID,
+        uuid: block.uuid,
         data: fileToUpload.slice(
           totalSize, Math.min(totalSize + block.size, fileToUpload.size), fileToUpload.type
         )

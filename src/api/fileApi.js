@@ -16,6 +16,12 @@ export default {
   uploadBlock: (blockUuid, data) => apiConfig.post(`/files/block/${blockUuid}`, data, { lowPriority: true }),
 
   downloadFile: (fileUuid) => apiConfig.post(`/files/download/${fileUuid}`),
-  downloadBlock: (blockUuid, fileUuid) => apiConfig.post(`/files/blockd/${fileUuid}`, { fileUUID: fileUuid } ),
-  completeDownload: (fileUuid) => apiConfig.post(`/files/upload/${fileUuid}`)
+  downloadBlock: (blockUuid, fileUuid) => apiConfig.get(
+    `/files/block/${blockUuid}`,
+    {
+      lowPriority: true,
+      params: { fileUUID: fileUuid },
+      responseType: 'arraybuffer'
+    }
+  ),
 }
