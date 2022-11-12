@@ -52,6 +52,10 @@
         </q-item>
       </confirmation-dialog>
 
+      <q-item clickable v-close-popup @click="() => download(data.file)" v-if="data.file && !data.file.isUploading">
+        <q-item-section>Download</q-item-section>
+      </q-item>
+
       <q-separator v-if="data.file && !data.file.isUploading"/>
 
       <q-item clickable v-close-popup>
@@ -69,7 +73,9 @@ import {inject, ref} from "vue";
 import useExplorer from "src/modules/File/useExplorer.js";
 import FileUpdateDialog from "components/File/FileUpdateDialog.vue";
 import DirectoryCreateDialog from "components/File/DirectoryCreateDialog.vue";
+import useDownloadFile from "src/modules/File/useDownloadFile.js";
 
+const { download } = useDownloadFile()
 const { isLoading, deleteFile, selected, getFiles, uploadFileRef } = useExplorer()
 
 const emitter = inject('emitter')
