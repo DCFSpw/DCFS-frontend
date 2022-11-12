@@ -13,5 +13,9 @@ export default {
     {},
     { throwException, lowPriority: true }
   ),
-  uploadBlock: (blockUUid, data) => apiConfig.post(`/files/block/${blockUUid}`, data, { lowPriority: true })
+  uploadBlock: (blockUuid, data) => apiConfig.post(`/files/block/${blockUuid}`, data, { lowPriority: true }),
+
+  downloadFile: (fileUuid) => apiConfig.post(`/files/download/${fileUuid}`),
+  downloadBlock: (blockUuid, fileUuid) => apiConfig.post(`/files/blockd/${fileUuid}`, { fileUUID: fileUuid } ),
+  completeDownload: (fileUuid) => apiConfig.post(`/files/upload/${fileUuid}`)
 }
