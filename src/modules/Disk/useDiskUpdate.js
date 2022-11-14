@@ -2,6 +2,7 @@ import {ref} from "vue";
 import {useQuasar} from "quasar";
 import diskApi from "src/api/diskApi";
 import {isOauth} from "src/modules/Provider/providerType.js";
+import {convertGbToByte} from "src/modules/Disk/helpers.js";
 
 export default function() {
   const $q = useQuasar()
@@ -18,8 +19,8 @@ export default function() {
 
     try {
       const toUpdate = isOauth(data.value.provider.type)
-        ? { name: data.value.name }
-        : { name: data.value.name, credentials: data.value.credentials }
+        ? { name: data.value.name, totalSpace: convertGbToByte(data.value.totalSpace) }
+        : { name: data.value.name, totalSpace: convertGbToByte(data.value.totalSpace), credentials: data.value.credentials }
 
       await diskApi.update(data.value.uuid, toUpdate)
       await refresh()

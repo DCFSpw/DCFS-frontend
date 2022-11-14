@@ -2,6 +2,7 @@ import {ref} from 'vue';
 import diskApi from 'src/api/diskApi';
 import {DISK_CREATION_UID_KEY} from "src/modules/Disk/Const/DiskConst";
 import {isOauth} from "src/modules/Provider/providerType.js";
+import {convertGbToByte} from "src/modules/Disk/helpers.js";
 
 export default function () {
   const isLoading = ref(false)
@@ -23,6 +24,7 @@ export default function () {
         name: data.value.name,
         providerUUID: data.value.provider.uuid,
         volumeUUID: data.value.volume.uuid,
+        totalSpace: convertGbToByte(data.value.totalSpace),
         credentials: oauth ? {} : data.value.credentials
       })
 

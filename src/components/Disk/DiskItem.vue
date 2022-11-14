@@ -10,6 +10,11 @@
       <q-card-section class="col">
         <provider-select-item :provider="disk.provider" />
         <volume-select-item :volume="disk.volume" />
+
+        <div class="flex flex-center items-center q-pa-sm column">
+          <strong class="text-h6">Space</strong>
+          <span>Total: {{ convertByteToGb(disk.totalSpace) }} GB | Free: {{ convertByteToGb(disk.freeSpace) }} GB</span>
+        </div>
       </q-card-section>
 
       <q-card-actions align="center" class="col-auto">
@@ -42,7 +47,7 @@ import useDiskDelete from "src/modules/Disk/useDiskDelete";
 import DiskUpdateForm from "components/Disk/DiskUpdateForm.vue";
 import ProviderSelectItem from "components/Provider/ProviderSelectItem.vue";
 import VolumeSelectItem from "components/Volume/VolumeSelectItem.vue";
-import {computed} from "vue";
+import {convertByteToGb} from "src/modules/Disk/helpers.js";
 
 const props = defineProps({
   disk: Object,
