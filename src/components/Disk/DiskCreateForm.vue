@@ -69,6 +69,25 @@
 
             <div class="row">
               <div class="col q-pa-sm">
+                <q-input
+                  type="number"
+                  filled
+                  v-model="data.totalSpace"
+                  label="Total space (GB)"
+                  lazy-rules
+                  :rules="[
+                    $rules.required('Total space is required'),
+                    $rules.minValue(0.1, 'Total space cannot be lower than 0.1 GB'),
+                    (val) =>
+                      (val !== null && val !== '' && (new RegExp('^[0-9]+(?:.?\\d{0,1})?$')).test(val)) ||
+                      'Only one decimal digit is allowed',
+                  ]"
+                />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col q-pa-sm">
                 <q-select
                   :options="providers"
                   filled
