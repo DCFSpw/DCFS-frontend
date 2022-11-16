@@ -58,10 +58,13 @@ AxiosInstance.interceptors.response.use(
     return getResponseData(response)
   },
   async (error) => {
+
     pendingRequests--;
     if (error.config.hasOwnProperty('throwException') && error.config.throwException === false) {
       return { data: getResponseData(error.response), status: error.response.status}
     }
+
+    console.log(error)
 
     const errMsg = error.response.data?.message ?? 'Unknown error occurred. Please try again later.'
     const httpCode = error.response.status
