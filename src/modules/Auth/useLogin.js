@@ -20,7 +20,6 @@ export default function () {
 
     try {
       const response = await authApi.login(data)
-      console.log(response)
       userSession.token = response.token
       userSession.user = response
       Quasar.Notify.create({ type: 'positive', message: 'Successfully logged in!' })

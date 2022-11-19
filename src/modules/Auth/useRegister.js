@@ -1,11 +1,10 @@
 import {useRouter} from "vue-router";
-import {useQuasar} from "quasar";
+import Quasar from "quasar";
 import {reactive, ref} from "vue";
 import authApi from "src/api/authApi";
 
 export default function () {
   const router = useRouter()
-  const $q = useQuasar()
   const data = reactive({
     email: '',
     password: '',
@@ -22,7 +21,7 @@ export default function () {
     try {
       const { passwordRepeated, ...apiData } = data
       await authApi.register(apiData)
-      $q.notify({ type: 'positive', message: 'Successfully registered! Now you can login to your account.' })
+      Quasar.Notify.create({ type: 'positive', message: 'Successfully registered! Now you can login to your account.' })
       await router.push({ name: 'login'})
     } finally {
       isLoading.value = false
