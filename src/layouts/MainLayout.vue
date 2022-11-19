@@ -110,12 +110,12 @@
 
 <script setup>
 import {onMounted, ref} from 'vue'
-import useAuth from "src/modules/useAuth";
 import ThemeSwitch from "components/ThemeSwitch.vue";
 import {useRoute, useRouter} from "vue-router";
 import useUserSession from "src/modules/useUserSession";
 import useProvider from "src/modules/Provider/useProvider";
 import UploadProgress from "components/File/UploadProgress.vue";
+import useLogout from "src/modules/Auth/useLogout.js";
 
 const menuList = [
   {
@@ -145,8 +145,7 @@ const menuList = [
 ]
 
 const leftDrawerOpen = ref(false)
-const auth = useAuth()
-const logout = auth.logout
+const {logout} = useLogout()
 const router = useRouter()
 const route = useRoute()
 const { user } = useUserSession()

@@ -1,10 +1,9 @@
-import {useQuasar} from "quasar";
+import Quasar from "quasar";
 import {computed, ref} from "vue";
 import userApi from "src/api/userApi";
 import useUserSession from "src/modules/useUserSession";
 
 export default function () {
-  const $q = useQuasar()
   const isLoading = ref(false)
   const data = ref({})
   const originalData = ref({})
@@ -26,7 +25,7 @@ export default function () {
 
     try {
       await userApi.updateProfile(data.value)
-      $q.notify({ type: 'positive', message: 'Profile updated' })
+      Quasar.Notify.create({ type: 'positive', message: 'Profile updated' })
 
       userSession.user.firstName = data.value.firstName
       userSession.user.lastName = data.value.lastName
