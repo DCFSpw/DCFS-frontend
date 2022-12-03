@@ -1,15 +1,13 @@
 import MockAdapter from "axios-mock-adapter";
 import apiConfig from "src/api/apiConfig.js";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import Quasar from "quasar";
 import useDiskDelete from "src/modules/Disk/useDiskDelete.js";
 
-vi.mock("quasar", () => ({
-  default: {
-    Notify: {
-      create: vi.fn(),
-    },
-  },
+const notifyMock = vi.fn();
+vi.mock("src/modules/useNotification", () => ({
+  default: () => ({
+    notify: notifyMock,
+  }),
 }));
 
 const mock = new MockAdapter(apiConfig);
@@ -34,7 +32,7 @@ describe("test useDiskDelete", () => {
     expect(mock.history.delete.length).toBe(1);
 
     // Assert notification sent
-    expect(Quasar.Notify.create)
+    expect(notifyMock)
       .toHaveBeenCalled()
       .toHaveBeenCalledWith(expect.objectContaining({ type: "positive" }));
 

@@ -3,18 +3,16 @@ import apiConfig from "src/api/apiConfig.js";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import useProfileInfo from "src/modules/UserProfile/useProfileInfo.js";
 import useUserSession from "src/modules/useUserSession.js";
-import Quasar from "quasar";
 
 vi.mock("src/modules/useUserSession", () => ({
   default: vi.fn(() => ({ token: "", user: {} })),
 }));
 
-vi.mock("quasar", () => ({
-  default: {
-    Notify: {
-      create: vi.fn(),
-    },
-  },
+const notifyMock = vi.fn();
+vi.mock("src/modules/useNotification", () => ({
+  default: () => ({
+    notify: notifyMock,
+  }),
 }));
 
 const mock = new MockAdapter(apiConfig);
@@ -81,7 +79,7 @@ describe("test useProfileInfo", () => {
     expect(mock.history.put.length).toBe(1);
 
     // Assert notification sent
-    expect(Quasar.Notify.create)
+    expect(notifyMock)
       .toHaveBeenCalled()
       .toHaveBeenCalledWith(expect.objectContaining({ type: "positive" }));
 

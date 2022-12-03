@@ -1,16 +1,17 @@
 import { ref } from "vue";
-import Quasar from "quasar";
 import diskApi from "src/api/diskApi";
+import useNotification from "src/modules/useNotification.js";
 
 export default function () {
   const isLoading = ref(false);
+  const { notify } = useNotification();
 
   const deleteDisk = async ({ uuid }, callback) => {
     isLoading.value = true;
     try {
       await diskApi.delete(uuid);
       await callback();
-      Quasar.Notify.create({
+      notify({
         type: "positive",
         message: "Disk has been deleted",
       });

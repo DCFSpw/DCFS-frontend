@@ -1,7 +1,7 @@
-import Quasar from "quasar";
 import { computed, ref } from "vue";
 import userApi from "src/api/userApi";
 import useUserSession from "src/modules/useUserSession";
+import useNotification from "src/modules/useNotification.js";
 
 export default function () {
   const isLoading = ref(false);
@@ -9,6 +9,7 @@ export default function () {
   const originalData = ref({});
   const form = ref(null);
   const userSession = useUserSession();
+  const { notify } = useNotification();
 
   const dataChanged = computed(() => {
     const original = JSON.stringify(originalData.value);
@@ -25,7 +26,7 @@ export default function () {
 
     try {
       await userApi.updateProfile(data.value);
-      Quasar.Notify.create({ type: "positive", message: "Profile updated" });
+      notify({ type: "positive", message: "Profile updated" });
 
       userSession.user.firstName = data.value.firstName;
       userSession.user.lastName = data.value.lastName;

@@ -5,14 +5,12 @@ import useUploadFile, {
 import MockAdapter from "axios-mock-adapter";
 import apiConfig from "src/api/apiConfig.js";
 import useExplorer from "src/modules/File/useExplorer.js";
-import Quasar from "quasar";
 
-vi.mock("quasar", () => ({
-  default: {
-    Notify: {
-      create: vi.fn(),
-    },
-  },
+const notifyMock = vi.fn();
+vi.mock("src/modules/useNotification", () => ({
+  default: () => ({
+    notify: notifyMock,
+  }),
 }));
 
 vi.mock("src/modules/File/useExplorer", () => ({
@@ -101,7 +99,7 @@ describe("test useDownloadFile", () => {
     });
 
     // Assert notification sent
-    expect(Quasar.Notify.create)
+    expect(notifyMock)
       .toHaveBeenCalled()
       .toHaveBeenCalledWith(expect.objectContaining({ type: "positive" }));
   });
@@ -161,7 +159,7 @@ describe("test useDownloadFile", () => {
     });
 
     // Assert notification sent
-    expect(Quasar.Notify.create)
+    expect(notifyMock)
       .toHaveBeenCalled()
       .toHaveBeenCalledWith(expect.objectContaining({ type: "positive" }));
   });
@@ -231,7 +229,7 @@ describe("test useDownloadFile", () => {
     });
 
     // Assert notification sent
-    expect(Quasar.Notify.create)
+    expect(notifyMock)
       .toHaveBeenCalled()
       .toHaveBeenCalledWith(expect.objectContaining({ type: "positive" }));
   });

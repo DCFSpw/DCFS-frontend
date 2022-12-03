@@ -1,15 +1,13 @@
 import MockAdapter from "axios-mock-adapter";
 import apiConfig from "src/api/apiConfig.js";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import Quasar from "quasar";
 import useVolumeManage from "src/modules/Volume/useVolumeManage.js";
 
-vi.mock("quasar", () => ({
-  default: {
-    Notify: {
-      create: vi.fn(),
-    },
-  },
+const notifyMock = vi.fn();
+vi.mock("src/modules/useNotification", () => ({
+  default: () => ({
+    notify: notifyMock,
+  }),
 }));
 
 const mock = new MockAdapter(apiConfig);
@@ -65,7 +63,7 @@ describe("test useVolumeManage", () => {
     expect(JSON.parse(mock.history.post[0].data)).toEqual(dataMock);
 
     // Assert notification sent
-    expect(Quasar.Notify.create)
+    expect(notifyMock)
       .toHaveBeenCalled()
       .toHaveBeenCalledWith(expect.objectContaining({ type: "positive" }));
 
@@ -101,7 +99,7 @@ describe("test useVolumeManage", () => {
     expect(JSON.parse(mock.history.put[0].data)).toEqual(dataMock);
 
     // Assert notification sent
-    expect(Quasar.Notify.create)
+    expect(notifyMock)
       .toHaveBeenCalled()
       .toHaveBeenCalledWith(expect.objectContaining({ type: "positive" }));
 
