@@ -20,6 +20,6 @@ provide('emitter', emitter)
 
 const lightTeamOn = useStorage('light-theme', false)
 const $q = useQuasar()
-$q.dark.set(!lightTeamOn.value)
+$q?.dark?.set(!lightTeamOn.value)
 
 </script>
