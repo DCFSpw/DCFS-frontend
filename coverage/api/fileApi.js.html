@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">59.25% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>16/27</span>
+                <span class='fraction'>27/27</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">59.25% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>16/27</span>
+                <span class='fraction'>27/27</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -101,48 +101,48 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import apiConfig from "src/api/apiConfig";
 &nbsp;
 export default {
-  index: (<span class="fstat-no" title="function not covered" >params) =&gt; apiConfig.get(`/files/manage`, { params }),</span>
-  show: (<span class="fstat-no" title="function not covered" >fileUuid) =&gt; apiConfig.get(`/files/manage/${fileUuid}`),</span>
-  create: (<span class="fstat-no" title="function not covered" >data) =&gt; apiConfig.post(`/files/manage`, data),</span>
-  update: (<span class="fstat-no" title="function not covered" >fileUuid,  data) =&gt; apiConfig.put(`/files/manage/${fileUuid}`, data),</span>
-  delete: (<span class="fstat-no" title="function not covered" >fileUuid) =&gt; apiConfig.delete(`/files/manage/${fileUuid}`),</span>
+  index: (params) =&gt; apiConfig.get(`/files/manage`, { params }),
+  show: (fileUuid) =&gt; apiConfig.get(`/files/manage/${fileUuid}`),
+  create: (data) =&gt; apiConfig.post(`/files/manage`, data),
+  update: (fileUuid,  data) =&gt; apiConfig.put(`/files/manage/${fileUuid}`, data),
+  delete: (fileUuid) =&gt; apiConfig.delete(`/files/manage/${fileUuid}`),
 &nbsp;
-  initUpload: (<span class="fstat-no" title="function not covered" >data) =&gt; apiConfig.post(`/files/upload`, data, { lowPriority: true }),</span>
-  completeUpload: (<span class="fstat-no" title="function not covered" >fileUUID, throwException) =&gt; apiConfig.post(</span>
-<span class="cstat-no" title="statement not covered" >    `/files/upload/${fileUUID}`,</span>
-<span class="cstat-no" title="statement not covered" >    {},</span>
-<span class="cstat-no" title="statement not covered" >    { throwException, lowPriority: true }</span>
-<span class="cstat-no" title="statement not covered" >  ),</span>
-  uploadBlock: (<span class="fstat-no" title="function not covered" >blockUuid, data) =&gt; apiConfig.post(`/files/block/${blockUuid}`, data, { lowPriority: true }),</span>
+  initUpload: (data) =&gt; apiConfig.post(`/files/upload`, data, { lowPriority: true }),
+  completeUpload: (fileUUID, throwException) =&gt; apiConfig.post(
+    `/files/upload/${fileUUID}`,
+    {},
+    { throwException, lowPriority: true }
+  ),
+  uploadBlock: (blockUuid, data) =&gt; apiConfig.post(`/files/block/${blockUuid}`, data, { lowPriority: true }),
 &nbsp;
-  downloadFile: (<span class="fstat-no" title="function not covered" >fileUuid) =&gt; apiConfig.post(`/files/download/${fileUuid}`),</span>
-  downloadBlock: (<span class="fstat-no" title="function not covered" >blockUuid, fileUuid) =&gt; apiConfig.get(</span>
-<span class="cstat-no" title="statement not covered" >    `/files/block/${blockUuid}`,</span>
-<span class="cstat-no" title="statement not covered" >    {</span>
-<span class="cstat-no" title="statement not covered" >      lowPriority: true,</span>
-<span class="cstat-no" title="statement not covered" >      params: { fileUUID: fileUuid },</span>
-<span class="cstat-no" title="statement not covered" >      responseType: 'arraybuffer'</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  ),</span>
+  downloadFile: (fileUuid) =&gt; apiConfig.post(`/files/download/${fileUuid}`),
+  downloadBlock: (blockUuid, fileUuid) =&gt; apiConfig.get(
+    `/files/block/${blockUuid}`,
+    {
+      lowPriority: true,
+      params: { fileUUID: fileUuid },
+      responseType: 'arraybuffer'
+    }
+  ),
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -151,7 +151,7 @@ export default {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2022-12-03T12:28:52.283Z
+                at 2022-12-03T16:21:43.705Z
             </div>
         <script src="../prettify.js"></script>
         <script>
