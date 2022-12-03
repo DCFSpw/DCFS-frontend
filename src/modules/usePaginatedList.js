@@ -4,10 +4,10 @@ export default function() {
   const isLoading = ref(false)
   const data = ref({})
   const page = ref(1)
-  const isEmpty = computed(() => data.value.pagination?.totalRecords === 0)
+  const isEmpty = computed(() => data.value.pagination?.totalRecords === 0 || !data.value.pagination)
 
   const getData = async (callback, { toLastPage, deleting } = {}) => {
-    if (toLastPage) {
+    if (toLastPage && data.value.pagination) {
       page.value = Math.max(data.value.pagination.totalPages, 1)
     }
 
