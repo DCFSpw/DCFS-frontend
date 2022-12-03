@@ -140,7 +140,7 @@
 
 import { PASSWORD_MAX, PASSWORD_MIN } from "src/validation/const";
 
-import {onMounted, ref} from "vue";
+import {onMounted} from "vue";
 import useChangePassword from "src/modules/UserProfile/useChangePassword";
 import useProfileInfo from "src/modules/UserProfile/useProfileInfo";
 

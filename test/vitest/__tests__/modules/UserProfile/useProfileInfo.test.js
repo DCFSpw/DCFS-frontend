@@ -1,70 +1,92 @@
 import MockAdapter from "axios-mock-adapter";
 import apiConfig from "src/api/apiConfig.js";
-import {beforeEach, describe, expect, it, vi} from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import useProfileInfo from "src/modules/UserProfile/useProfileInfo.js";
 import useUserSession from "src/modules/useUserSession.js";
 import Quasar from "quasar";
 
 vi.mock("src/modules/useUserSession", () => ({
-  default: vi.fn(() => ({token: '', user: {}}))
-}))
+  default: vi.fn(() => ({ token: "", user: {} })),
+}));
 
-vi.mock('quasar', () => ({
+vi.mock("quasar", () => ({
   default: {
     Notify: {
-      create: vi.fn()
-    }
-  }
-}))
+      create: vi.fn(),
+    },
+  },
+}));
 
-const mock = new MockAdapter(apiConfig)
+const mock = new MockAdapter(apiConfig);
 
-describe('test useProfileInfo', () => {
-  const userData = {firstName: 'John', lastName: 'Doe'}
+describe("test useProfileInfo", () => {
+  const userData = { firstName: "John", lastName: "Doe" };
 
   beforeEach(() => {
-    mock.reset()
-  })
+    mock.reset();
+  });
 
-  it('should get user profile info', async () => {
-    const { getProfile, data } = useProfileInfo()
+  it("should get user profile info", async () => {
+    const { getProfile, data } = useProfileInfo();
 
-    mock
-      .onGet('user/profile')
-      .reply(200, {success: true, data: userData})
+    mock.onGet("user/profile").reply(200, { success: true, data: userData });
 
-    await getProfile()
+    await getProfile();
 
-    expect(mock.history.get.length).toBe(1)
+    expect(mock.history.get.length).toBe(1);
 
-    expect(data.value).toEqual(userData)
-  })
+    expect(data.value).toEqual(userData);
+  });
 
-  it('should update user profile', async () => {
-    let session = {token: '', user: {}}
-    useUserSession.mockImplementationOnce(() => session)
+  it("should return true if data changed", async () => {
+    const { dataChanged, data, originalData } = useProfileInfo();
 
-    const { updateProfile, data, form } = useProfileInfo()
+    originalData.value = { name: "John" };
+    data.value = { name: "Joe" };
 
-    form.value = { validate: vi.fn(() => true) }
+    expect(dataChanged.value).toBe(true);
+  });
 
-    mock
-      .onPut('user/profile')
-      .reply(200, {success: true})
+  it("should return false if data not changed", async () => {
+    const { dataChanged, data, originalData } = useProfileInfo();
 
-    data.value = userData
+    originalData.value = { name: "John" };
+    data.value = originalData.value;
 
-    await updateProfile()
+    expect(dataChanged.value).toBe(false);
+  });
 
-    expect(mock.history.put.length).toBe(1)
+  it("should return if form is not valid", async () => {
+    const { updateProfile, form } = useProfileInfo();
+
+    form.value = { validate: vi.fn(() => false) };
+
+    await updateProfile();
+  });
+
+  it("should update user profile", async () => {
+    let session = { token: "", user: {} };
+    useUserSession.mockImplementationOnce(() => session);
+
+    const { updateProfile, data, form } = useProfileInfo();
+
+    form.value = { validate: vi.fn(() => true) };
+
+    mock.onPut("user/profile").reply(200, { success: true });
+
+    data.value = userData;
+
+    await updateProfile();
+
+    expect(mock.history.put.length).toBe(1);
 
     // Assert notification sent
     expect(Quasar.Notify.create)
       .toHaveBeenCalled()
-      .toHaveBeenCalledWith(expect.objectContaining({type: 'positive'}))
+      .toHaveBeenCalledWith(expect.objectContaining({ type: "positive" }));
 
     // Assert session updated
-    expect(session.user.firstName).toEqual(userData.firstName)
-    expect(session.user.lastName).toEqual(userData.lastName)
-  })
-})
+    expect(session.user.firstName).toEqual(userData.firstName);
+    expect(session.user.lastName).toEqual(userData.lastName);
+  });
+});

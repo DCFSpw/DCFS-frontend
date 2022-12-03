@@ -1,48 +1,58 @@
 import MockAdapter from "axios-mock-adapter";
 import apiConfig from "src/api/apiConfig.js";
-import {beforeEach, describe, expect, it, vi} from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import Quasar from "quasar";
 import useChangePassword from "src/modules/UserProfile/useChangePassword.js";
 
-vi.mock('quasar', () => ({
+vi.mock("quasar", () => ({
   default: {
     Notify: {
-      create: vi.fn()
-    }
-  }
-}))
+      create: vi.fn(),
+    },
+  },
+}));
 
-const mock = new MockAdapter(apiConfig)
+const mock = new MockAdapter(apiConfig);
 
-describe('test useChangePassword', () => {
+describe("test useChangePassword", () => {
   beforeEach(() => {
-    mock.reset()
-  })
+    mock.reset();
+  });
 
-  it('should change password', async () => {
-    const { changePassword, form, data } = useChangePassword()
+  it("should return if form is not valid", async () => {
+    const { changePassword, form, data } = useChangePassword();
+
+    form.value = {
+      validate: vi.fn(() => false),
+    };
+
+    data.value = { password: "123" };
+
+    await changePassword();
+  });
+
+  it("should change password", async () => {
+    const { changePassword, form, data } = useChangePassword();
 
     form.value = {
       validate: vi.fn(() => true),
-      resetValidation: vi.fn()
-    }
+      resetValidation: vi.fn(),
+    };
 
-    mock
-      .onPut('user/password')
-      .reply(200, {success: true})
+    mock.onPut("user/password").reply(200, { success: true });
 
-    data.value = { password: '123' }
+    data.value = { password: "123" };
 
-    await changePassword()
+    await changePassword();
 
-    expect(mock.history.put.length).toBe(1)
+    expect(mock.history.put.length).toBe(1);
 
     // Assert notification sent
     expect(Quasar.Notify.create)
       .toHaveBeenCalled()
-      .toHaveBeenCalledWith(expect.objectContaining({type: 'positive'}))
+      .toHaveBeenCalledWith(expect.objectContaining({ type: "positive" }));
 
     // Assert data form clears
-    expect(data.value).toEqual({})
-  })
-})
+    expect(data.value).toEqual({});
+  });
+});
