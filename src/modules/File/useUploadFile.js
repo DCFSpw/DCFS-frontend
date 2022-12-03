@@ -1,7 +1,7 @@
 import { ref } from "vue";
 import fileApi from "src/api/fileApi.js";
-import Quasar from "quasar";
 import useExplorer from "src/modules/File/useExplorer.js";
+import useNotification from "src/modules/useNotification.js";
 
 export const BLOCK_UPLOAD_TRIES = 3;
 export const RETRY_UPLOAD_HTTP_CODE = 449;
@@ -10,6 +10,7 @@ const uploadingFiles = ref([]);
 
 export default function () {
   const isLoading = ref(false);
+  const { notify } = useNotification();
 
   const { volume, root, getFiles } = useExplorer();
 
@@ -157,7 +158,7 @@ export default function () {
         await uploadCompleted(initResult.file.uuid);
       }
 
-      Quasar.Notify.create({ type: "positive", message: "File uploaded" });
+      notify({ type: "positive", message: "File uploaded" });
     } finally {
       if (initResult?.file)
         removeUploadingFile(volumeUuid, rootUuid, initResult?.file);

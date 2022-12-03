@@ -1,16 +1,17 @@
-import Quasar from "quasar";
 import diskApi from "src/api/diskApi";
 import { useRoute, useRouter } from "vue-router";
 import { DISK_CREATION_UID_KEY } from "src/modules/Disk/Const/DiskConst";
+import useNotification from "src/modules/useNotification.js";
 
 export default function () {
   const route = useRoute();
   const router = useRouter();
+  const { notify } = useNotification();
 
   const checkOauth = async () => {
     const code = route.query.code ?? null;
     if (code === null) {
-      Quasar.Notify.create({
+      notify({
         type: "negative",
         message: "Oauth code not found.",
       });
@@ -20,7 +21,7 @@ export default function () {
 
     const diskUuid = localStorage.getItem(DISK_CREATION_UID_KEY);
     if (diskUuid === null) {
-      Quasar.Notify.create({
+      notify({
         type: "negative",
         message: "Disk uuid not found in local storage.",
       });
@@ -36,7 +37,7 @@ export default function () {
         code,
       });
 
-      Quasar.Notify.create({
+      notify({
         type: "positive",
         message: "Disk added successfully",
       });

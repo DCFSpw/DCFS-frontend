@@ -2,12 +2,13 @@ import { ref } from "vue";
 import diskApi from "src/api/diskApi";
 import { isOauth } from "src/modules/Provider/providerType.js";
 import { convertGbToByte } from "src/modules/Disk/helpers.js";
-import Quasar from "quasar";
+import useNotification from "src/modules/useNotification.js";
 
 export default function () {
   const isLoading = ref(false);
   const data = ref({ credentials: {} });
   const form = ref(null);
+  const { notify } = useNotification();
 
   const updateDisk = async (refresh) => {
     if (!(await form.value.validate())) {
@@ -30,7 +31,7 @@ export default function () {
 
       await diskApi.update(data.value.uuid, toUpdate);
       await refresh();
-      Quasar.Notify.create({
+      notify({
         type: "positive",
         message: "Disk has been updated",
       });

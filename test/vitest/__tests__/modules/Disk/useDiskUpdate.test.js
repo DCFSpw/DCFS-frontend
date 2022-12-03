@@ -4,14 +4,12 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import useDiskUpdate from "src/modules/Disk/useDiskUpdate.js";
 import { convertGbToByte } from "src/modules/Disk/helpers.js";
 import { isOauth } from "src/modules/Provider/providerType.js";
-import Quasar from "quasar";
 
-vi.mock("quasar", () => ({
-  default: {
-    Notify: {
-      create: vi.fn(),
-    },
-  },
+const notifyMock = vi.fn();
+vi.mock("src/modules/useNotification", () => ({
+  default: () => ({
+    notify: notifyMock,
+  }),
 }));
 
 vi.mock("src/modules/Provider/providerType", () => ({
@@ -93,7 +91,7 @@ describe("test useDiskManage", () => {
     });
 
     // Assert notification sent
-    expect(Quasar.Notify.create)
+    expect(notifyMock)
       .toHaveBeenCalled()
       .toHaveBeenCalledWith(expect.objectContaining({ type: "positive" }));
 
@@ -147,7 +145,7 @@ describe("test useDiskManage", () => {
     });
 
     // Assert notification sent
-    expect(Quasar.Notify.create)
+    expect(notifyMock)
       .toHaveBeenCalled()
       .toHaveBeenCalledWith(expect.objectContaining({ type: "positive" }));
 

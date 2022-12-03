@@ -1,6 +1,6 @@
 import axios from "axios";
 import useUserSession from "src/modules/useUserSession";
-import Quasar from "quasar";
+import { Notify } from "quasar";
 import { getJwtErrorCodes } from "src/api/errorCodeEnum";
 const AxiosInstance = axios.create({
   baseURL: process.env.VUE_APP_API_URL,
@@ -80,7 +80,7 @@ AxiosInstance.interceptors.response.use(
       window.location.href = "/";
     }
 
-    Quasar.Notify.create({
+    Notify.create({
       type: "negative",
       message: errMsg,
     });

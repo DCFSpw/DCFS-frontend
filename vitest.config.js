@@ -32,6 +32,7 @@ export default defineConfig({
         "src/modules/Disk/Const/**",
         "src/modules/Provider/providerType.js",
         "src/App.vue",
+        "src/modules/useNotification.js",
       ],
     },
   },

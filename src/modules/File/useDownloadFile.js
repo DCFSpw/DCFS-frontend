@@ -1,6 +1,6 @@
 import { ref } from "vue";
 import fileApi from "src/api/fileApi.js";
-import Quasar from "quasar";
+import useNotification from "src/modules/useNotification.js";
 
 export const BLOCK_DOWNLOAD_TRIES = 3;
 
@@ -8,6 +8,7 @@ const downloadingFile = ref();
 
 export default function () {
   const isLoading = ref(false);
+  const { notify } = useNotification();
 
   const saveAs = ({ name, buffers, mime = "application/octet-stream" }) => {
     const blob = new Blob([buffers], { type: mime });
@@ -83,7 +84,7 @@ export default function () {
 
   const download = async (file) => {
     if (downloadingFile.value) {
-      Quasar.Notify.create({
+      notify({
         type: "negative",
         message: "Only single file can be downloaded at the time",
       });

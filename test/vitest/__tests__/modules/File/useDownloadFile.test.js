@@ -4,14 +4,12 @@ import apiConfig from "src/api/apiConfig.js";
 import useDownloadFile, {
   BLOCK_DOWNLOAD_TRIES,
 } from "src/modules/File/useDownloadFile.js";
-import Quasar from "quasar";
 
-vi.mock("quasar", () => ({
-  default: {
-    Notify: {
-      create: vi.fn(),
-    },
-  },
+const notifyMock = vi.fn();
+vi.mock("src/modules/useNotification", () => ({
+  default: () => ({
+    notify: notifyMock,
+  }),
 }));
 
 const mock = new MockAdapter(apiConfig);
@@ -32,7 +30,7 @@ describe("test useDownloadFile", () => {
     await download();
 
     // Assert notification sent
-    expect(Quasar.Notify.create)
+    expect(notifyMock)
       .toHaveBeenCalled()
       .toHaveBeenCalledWith(
         expect.objectContaining({
@@ -195,7 +193,7 @@ describe("test useDownloadFile", () => {
       expect(mock.history.get.length).toBe(BLOCK_DOWNLOAD_TRIES + 1);
 
       // Assert notification sent
-      expect(Quasar.Notify.create)
+      expect(notifyMock)
         .toHaveBeenCalled()
         .toHaveBeenCalledWith(expect.objectContaining({ type: "negative" }));
     }
