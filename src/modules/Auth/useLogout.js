@@ -1,19 +1,19 @@
 import useUserSession from "src/modules/useUserSession";
-import {useRouter} from "vue-router";
-import Quasar from "quasar";
+import { useRouter } from "vue-router";
+import useNotification from "src/modules/useNotification.js";
 
 export default function () {
-  const userSession = useUserSession()
-  const router = useRouter()
-
+  const userSession = useUserSession();
+  const router = useRouter();
+  const { notify } = useNotification();
   const logout = async () => {
-    userSession.token = ''
-    userSession.user = {}
-    Quasar.Notify.create({ type: 'positive', message: 'Logged out!' })
-    await router.push({ name: 'login' })
-  }
+    userSession.token = "";
+    userSession.user = {};
+    notify({ type: "positive", message: "Logged out!" });
+    await router.push({ name: "login" });
+  };
 
   return {
-    logout
-  }
+    logout,
+  };
 }

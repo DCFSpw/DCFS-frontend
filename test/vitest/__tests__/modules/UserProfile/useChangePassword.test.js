@@ -1,15 +1,13 @@
 import MockAdapter from "axios-mock-adapter";
 import apiConfig from "src/api/apiConfig.js";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import Quasar from "quasar";
 import useChangePassword from "src/modules/UserProfile/useChangePassword.js";
 
-vi.mock("quasar", () => ({
-  default: {
-    Notify: {
-      create: vi.fn(),
-    },
-  },
+const notifyMock = vi.fn();
+vi.mock("src/modules/useNotification", () => ({
+  default: () => ({
+    notify: notifyMock,
+  }),
 }));
 
 const mock = new MockAdapter(apiConfig);
@@ -48,7 +46,7 @@ describe("test useChangePassword", () => {
     expect(mock.history.put.length).toBe(1);
 
     // Assert notification sent
-    expect(Quasar.Notify.create)
+    expect(notifyMock)
       .toHaveBeenCalled()
       .toHaveBeenCalledWith(expect.objectContaining({ type: "positive" }));
 

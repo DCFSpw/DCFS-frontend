@@ -1,10 +1,7 @@
-import useLogin from "src/modules/Auth/useLogin.js";
 import MockAdapter from "axios-mock-adapter";
 import { describe, expect, it, vi, afterAll, beforeEach } from "vitest";
 import apiConfig from "src/api/apiConfig.js";
-import Quasar from "quasar";
 import { useRoute, useRouter } from "vue-router";
-import useUserSession from "src/modules/useUserSession.js";
 import useDiskOauth from "src/modules/Disk/useDiskOauth.js";
 import { DISK_CREATION_UID_KEY } from "src/modules/Disk/Const/DiskConst.js";
 
@@ -19,12 +16,11 @@ vi.mock("vue-router", () => ({
   })),
 }));
 
-vi.mock("quasar", () => ({
-  default: {
-    Notify: {
-      create: vi.fn(),
-    },
-  },
+const notifyMock = vi.fn();
+vi.mock("src/modules/useNotification", () => ({
+  default: () => ({
+    notify: notifyMock,
+  }),
 }));
 
 const mock = new MockAdapter(apiConfig);
@@ -53,7 +49,7 @@ describe("test useDiskOauth", () => {
     await checkOauth();
 
     // Assert notification sent
-    expect(Quasar.Notify.create)
+    expect(notifyMock)
       .toHaveBeenCalled()
       .toHaveBeenCalledWith(
         expect.objectContaining({
@@ -79,7 +75,7 @@ describe("test useDiskOauth", () => {
     await checkOauth();
 
     // Assert notification sent
-    expect(Quasar.Notify.create)
+    expect(notifyMock)
       .toHaveBeenCalled()
       .toHaveBeenCalledWith(
         expect.objectContaining({
@@ -120,7 +116,7 @@ describe("test useDiskOauth", () => {
     });
 
     // Assert notification sent
-    expect(Quasar.Notify.create)
+    expect(notifyMock)
       .toHaveBeenCalled()
       .toHaveBeenCalledWith(
         expect.objectContaining({

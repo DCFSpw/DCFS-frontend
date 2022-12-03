@@ -1,11 +1,12 @@
 import { ref } from "vue";
 import volumeApi from "src/api/volumeApi";
-import Quasar from "quasar";
+import useNotification from "src/modules/useNotification.js";
 
 export default function () {
   const isLoading = ref(false);
   const data = ref({ settings: {} });
   const form = ref(null);
+  const { notify } = useNotification();
 
   const makeAction = async (refresh, action) => {
     if (!(await form.value.validate())) {
@@ -25,7 +26,7 @@ export default function () {
 
   const updateVolume = async (refresh) => {
     if (await makeAction(refresh, (data) => volumeApi.update(data.uuid, data)))
-      Quasar.Notify.create({
+      notify({
         type: "positive",
         message: "Volume has been updated",
       });
@@ -39,7 +40,7 @@ export default function () {
       )
     ) {
       data.value = { settings: {} };
-      Quasar.Notify.create({
+      notify({
         type: "positive",
         message: "Volume has been created",
       });
