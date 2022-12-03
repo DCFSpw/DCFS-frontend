@@ -22,7 +22,7 @@ pipeline {
                     steps {
                         sh 'npm install'
                         stash name: 'repo'
-                    } 
+                    }
                 }
                 stage('update global node_modules') {
                     steps {
@@ -33,14 +33,14 @@ pipeline {
                     parallel {
                         stage('build') {
                             steps {
-                                unstash 'repo' 
+                                unstash 'repo'
                                 sh 'npm run build'
                             }
                         }
                         stage('UT') {
                             steps {
                                 unstash 'repo'
-                                sh 'npm run test'
+                                sh 'npm run test:unit:ci'
                             }
                         }
                     }
