@@ -18,6 +18,7 @@ export default defineConfig({
     coverage: {
       all: true,
       exclude: [
+        "**/*.vue",
         "node_modules/**",
         "dist/**",
         "public/**",
@@ -33,6 +34,7 @@ export default defineConfig({
         "src/modules/Provider/providerType.js",
         "src/App.vue",
         "src/modules/useNotification.js",
+        "src/router/**",
       ],
     },
   },
