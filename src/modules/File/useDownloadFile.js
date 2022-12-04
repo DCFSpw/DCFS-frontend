@@ -3,12 +3,13 @@ import fileApi from "src/api/fileApi.js";
 import useNotification from "src/modules/useNotification.js";
 
 export const BLOCK_DOWNLOAD_TRIES = 3;
+export const NOT_COMPLETE_HEADER_VALUE = "not complete";
 
 const downloadingFile = ref();
 
 export default function () {
   const isLoading = ref(false);
-  const { notify } = useNotification();
+  const { notify, modal } = useNotification();
 
   const saveAs = ({ name, buffers, mime = "application/octet-stream" }) => {
     const blob = new Blob([buffers], { type: mime });
@@ -54,8 +55,10 @@ export default function () {
   };
 
   const downloadSingle = async (file, block) => {
-    const buffers = await getBlock(file, block);
-    saveAs({ name: file.name, buffers });
+    const { data: buffers, headers } = await getBlock(file, block);
+    const isCorrupted = getIsCorrupted(headers);
+    if (isCorrupted) showCorruptedDialog(file.name);
+    saveAs({ name: getFileName(file.name, isCorrupted), buffers });
   };
 
   const downloadMultiple = async (file, blocks) => {
@@ -63,23 +66,56 @@ export default function () {
       blocks.map(
         (block) =>
           new Promise(async (resolve) => {
-            const buffer = await getBlock(file, block);
+            const { data: buffer, headers } = await getBlock(file, block);
             resolve({
               order: block.order,
               buffer,
+              isCorrupted: getIsCorrupted(headers),
             });
           })
       )
     );
   };
 
+  const getIsCorrupted = (headers) => {
+    return (
+      headers &&
+      headers["file-completeness"] &&
+      headers["file-completeness"] === NOT_COMPLETE_HEADER_VALUE
+    );
+  };
+
+  const getFileName = (fileName, isCorrupted) => {
+    const prefix = isCorrupted ? "CORRUPTED - " : "";
+    return `${prefix}${fileName}`;
+  };
+
   const saveMultiple = (file, blockBuffers) => {
+    let isCorrupted = false;
+
     const sortedBuffers = blockBuffers
+      .filter((item) => {
+        if (item.isCorrupted) {
+          isCorrupted = true;
+          return false;
+        }
+
+        return true;
+      })
       .sort((a, b) => (a.order > b.order ? 1 : -1))
       .map((item) => new Uint8Array(item.buffer));
 
     const buffers = concatenate(sortedBuffers);
-    saveAs({ name: file.name, buffers });
+    saveAs({ name: getFileName(file.name, isCorrupted), buffers });
+  };
+
+  const showCorruptedDialog = (fileName) => {
+    modal({
+      title: "File corrupted",
+      message: `Downloaded file: '${fileName}' is corrupted. It is not recommended to open this file unless you know what you are doing. If the problem persists it is recommended to delete this file.`,
+      cancel: false,
+      persistent: true,
+    });
   };
 
   const download = async (file) => {
@@ -105,6 +141,10 @@ export default function () {
           returnedFile,
           result.blocks
         );
+
+        if (blockBuffers.find((blockBuffer) => blockBuffer.isCorrupted))
+          showCorruptedDialog(file.name);
+
         await saveMultiple(file, blockBuffers);
       }
     } finally {
