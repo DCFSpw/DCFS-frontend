@@ -50,10 +50,13 @@ const getResponseData = (response) => {
 
 AxiosInstance.interceptors.response.use(
   (response) => {
-    // if (response.config.responseType === RESPONSE_TYPES.ARRAYBUFFER) return response.data;
-    // if (response.data.type === RESPONSE_TYPES.PDF) return response;
-    // For now
     pendingRequests--;
+    if (response.config.withHeaders) {
+      return {
+        data: getResponseData(response),
+        headers: response.headers,
+      };
+    }
     return getResponseData(response);
   },
   async (error) => {
