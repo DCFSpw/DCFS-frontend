@@ -1,18 +1,24 @@
 <template>
   <div>
-    <div v-if="emptyResult" class="flex flex-center column q-pa-lg">
-      <slot name="empty"/>
+    <div v-if="isLoading" class="flex flex-center column q-pa-lg q-mt-lg">
+      <q-spinner size="50px"/>
     </div>
-    <div v-else class="q-ma-sm">
-      <slot/>
-    </div>
-    <div class="flex justify-center q-ma-lg">
-      <q-pagination
-        v-if="totalPages > 1"
-        v-model="currentPage"
-        :max="totalPages"
-        :disable="isLoading"
-      />
+
+    <div v-else>
+      <div v-if="emptyResult" class="flex flex-center column q-pa-lg">
+        <slot name="empty"/>
+      </div>
+      <div v-else class="q-ma-sm">
+        <slot/>
+      </div>
+      <div class="flex justify-center q-ma-lg">
+        <q-pagination
+          v-if="totalPages > 1"
+          v-model="currentPage"
+          :max="totalPages"
+          :disable="isLoading"
+        />
+      </div>
     </div>
   </div>
 </template>
