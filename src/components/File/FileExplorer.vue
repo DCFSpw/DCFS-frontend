@@ -12,21 +12,38 @@
       </div>
     </div>
 
-    <transition-group
-      v-if="computedFiles.length"
-      class="flex full-width full-height q-mt-lg row items-stretch"
-      enter-active-class="animated fadeIn"
-      tag="div"
-    >
-      <div v-for="file in computedFiles" :key="file.uuid" class="col-xl-1 col-lg-2 col-md-3 col-sm-6 col-12">
-        <file-type :file="file" />
+    <div class="row justify-center q-mt-lg" v-if="volume && !volume.isReady">
+      <div class="column col-xl-4 col-sm-6 col-12">
+        <q-banner>
+          <template v-slot:avatar>
+            <q-icon name="fa-solid fa-exclamation-triangle" color="warning" />
+          </template>
+          Volume is not fully configured. Attach disks to volume.
+          <template v-slot:action>
+            <q-btn flat color="primary" label="Disks settings" @click="() => router.push({ name: 'disks' })"/>
+          </template>
+        </q-banner>
       </div>
-    </transition-group>
-    <div class="text-center q-mt-lg" v-else>
-      <span class="text-h6">{{ noFileMsg }}</span>
+
     </div>
 
-    <context-menu/>
+    <div v-else-if="volume">
+      <transition-group
+        v-if="computedFiles.length"
+        class="flex full-width full-height q-mt-lg row items-stretch"
+        enter-active-class="animated fadeIn"
+        tag="div"
+      >
+        <div v-for="file in computedFiles" :key="file.uuid" class="col-xl-1 col-lg-2 col-md-3 col-sm-6 col-12">
+          <file-type :file="file" />
+        </div>
+      </transition-group>
+      <div class="text-center q-mt-lg" v-else>
+        <span class="text-h6">{{ noFileMsg }}</span>
+      </div>
+    </div>
+
+    <context-menu v-if="volume.isReady"/>
   </q-page>
 </template>
 
@@ -38,7 +55,7 @@ import useExplorer from "src/modules/File/useExplorer.js";
 import FileType from "components/File/FileType.vue";
 import ContextMenu from "components/File/ContextMenu.vue";
 import {computed, watch} from "vue";
-import {useRoute} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import useVolumeSelectList from "src/modules/Volume/useVolumeSelectList.js";
 import useUploadFile from "src/modules/File/useUploadFile.js";
 import UtilityButtons from "components/File/UtilityButtons.vue";
@@ -48,6 +65,7 @@ const { uploadingFiles } = useUploadFile()
 const { getVolume } = useVolumeSelectList()
 
 const route = useRoute()
+const router = useRouter()
 
 const noFileMsg = computed(() => {
   if (!volume.value) return 'No volumes found. Please go to `Volumes` tab to create your first volume.'
@@ -77,7 +95,7 @@ watch(route, async (route) => {
   const newVolumeUuid = route.query.volumeUuid
   const newRootUuid = route.query.rootUuid
   if (newVolumeUuid !== volume.value.uuid || newRootUuid !== root.value?.uuid) {
-    if (newVolumeUuid !== volume.value.uuid)
+    if (newVolumeUuid !== volume.value.uuid && newVolumeUuid)
       volume.value = await getVolume(newVolumeUuid)
 
     if (newRootUuid !== root.value?.uuid)
