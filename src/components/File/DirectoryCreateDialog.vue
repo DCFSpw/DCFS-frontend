@@ -12,6 +12,7 @@
           <q-form
             greedy
             ref="form"
+            @submit.prevent="() => createDirectory(data)"
           >
             <div class="row">
               <div class="col q-pa-sm">

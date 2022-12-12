@@ -11,10 +11,12 @@
     <my-pagination v-model:page="page" :callback="getDisks" :is-loading="isLoading" :pagination="data.pagination">
       <template #default>
         <div class="q-col-gutter-lg flex row">
-          <disk-item v-for="disk of data.data" :key="disk.uuid" :disk="disk" :refresh="getDisks"/>
+          <div v-for="disk of data.data" :key="disk.uuid" class="col-lg-4 col-md-6 col-12">
+            <disk-group v-if="disk.array?.length" :disks="disk.array" :refresh="getDisks"/>
+            <disk-item v-else :disk="disk" :refresh="getDisks"/>
+          </div>
         </div>
       </template>
-
 
       <template #empty>
         <div class="text-h4">
@@ -35,6 +37,7 @@
 <script setup>
 import MyPagination from "components/MyPagination.vue";
 import DiskItem from "components/Disk/DiskItem.vue";
+import DiskGroup from "components/Disk/DiskGroup.vue";
 import useDiskList from "src/modules/Disk/useDiskList";
 import DiskCreateForm from "components/Disk/DiskCreateForm.vue";
 

@@ -12,6 +12,7 @@
           <q-form
             greedy
             ref="form"
+            @submit.prevent="() => updateFile(file, data)"
           >
             <div class="row">
               <div class="col q-pa-sm">
