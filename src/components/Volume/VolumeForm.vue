@@ -145,7 +145,14 @@ const onRefresh = () => {
   if (!wasInitBackup.value && data.value.settings.backup === BACKUP.RAID) {
     $q.dialog({
       title: 'Information',
-      message: 'Backup is enabled. Please make sure to backup your data before deleting the volume.',
+      html: true,
+      message: "You’ve just created a volume with RAID10 backup.<br>" +
+        "<br>" +
+        "Please note that disks are paired into RAID1 disks in the order they were added to the volume. For example, the first disk will be paired with the second disk, the third with the fourth, etc.<br>" +
+        "<br>" +
+        "Therefore, pay special attention to the order in which you add disks. To ensure the best experience with RAID10 volume, make sure that subsequent disks have similar capabilities, including available space.<br>" +
+        "<br>" +
+        "The pairing order cannot be changed later without first removing the disks from the volume.",
       persistent: true
     })
   }

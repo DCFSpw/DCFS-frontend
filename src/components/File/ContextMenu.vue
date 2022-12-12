@@ -103,7 +103,3 @@ const onShow = () => {
 const clickUpload = () => uploadFileRef.value.click()
 
 </script>
-
-<style scoped>
-
-</style>
