@@ -115,15 +115,23 @@
           </q-form>
         </q-card-section>
 
-        <q-card-actions align="right" v-if="!isLoading"  class="q-pa-md">
-          <q-btn label="Cancel" v-close-popup />
-          <q-btn
-            :disable="!selectData.length"
-            color="positive"
-            label="Create"
-            icon="fa-solid fa-plus"
-            @click="() => createDisk(refresh)"
-          />
+        <q-card-actions align="between" v-if="!isLoading"  class="q-pa-md">
+          <div>
+            <small>
+              <q-icon name="fa-solid fa-exclamation-triangle"/>
+              You cannot change disk provider or volume in the existing disk.
+            </small>
+          </div>
+          <div>
+            <q-btn label="Cancel" v-close-popup class="q-mr-sm"/>
+            <q-btn
+              :disable="!selectData.length"
+              color="positive"
+              label="Create"
+              icon="fa-solid fa-plus"
+              @click="() => createDisk(refresh)"
+            />
+          </div>
         </q-card-actions>
         <q-card-actions align="center" v-else class="q-mb-sm q-pa-md">
           <q-spinner size="4em" color="primary"/>

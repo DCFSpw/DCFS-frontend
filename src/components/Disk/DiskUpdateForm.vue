@@ -53,7 +53,10 @@
 
         <q-card-actions align="between" v-if="!isLoading" class="q-pa-md">
           <div>
-            <small>You cannot change disk provider or volume in the existing disk.</small>
+            <small>
+              <q-icon name="fa-solid fa-exclamation-triangle"/>
+              You cannot change disk provider or volume in the existing disk.
+            </small>
           </div>
           <div>
             <q-btn label="Cancel" v-close-popup class="q-mr-sm"/>

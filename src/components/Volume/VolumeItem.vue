@@ -52,7 +52,7 @@ import BoolCheck from "components/BoolCheck.vue";
 import ConfirmationDialog from "components/ConfirmationDialog.vue";
 import useVolumeDelete from "src/modules/Volume/useVolumeDelete";
 import VolumeForm from "components/Volume/VolumeForm.vue";
-import {FILE_PARTITION_TRANS} from "src/modules/Volume/volumeConst.js";
+import {BACKUP, ENCRYPTION, FILE_PARTITION_TRANS} from "src/modules/Volume/volumeConst.js";
 
 const props = defineProps({
   volume: Object,
@@ -62,11 +62,11 @@ const props = defineProps({
 const settings = computed(() => [
   {
     name: 'Backup',
-    value: props.volume.settings.backup === 1 ? 'RAID1' : BOOL_FALSE
+    value: props.volume.settings.backup === BACKUP.RAID ? 'RAID10' : BOOL_FALSE
   },
   {
     name: 'Encryption',
-    value: props.volume.settings.encryption === 1 ? BOOL_TRUE : BOOL_FALSE
+    value: props.volume.settings.encryption === ENCRYPTION.ON ? BOOL_TRUE : BOOL_FALSE
   },
   {
     name: 'File partition',

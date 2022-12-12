@@ -31,6 +31,7 @@
             <div class="row">
               <div class="col q-pa-sm">
                 <q-select
+                  :disable="!creating"
                   :options="backupOptions"
                   filled
                   v-model="data.settings.backup"
@@ -47,6 +48,7 @@
             <div class="row">
               <div class="col q-pa-sm">
                 <q-select
+                  :disable="!creating"
                   :options="encryptionOptions"
                   filled
                   v-model="data.settings.encryption"
@@ -79,10 +81,18 @@
           </q-form>
         </q-card-section>
 
-        <q-card-actions align="right" v-if="!isLoading" class="q-pa-md">
-          <q-btn label="Cancel" v-close-popup />
-          <q-btn color="positive" label="Create" icon="fa-solid fa-plus" @click="() => createVolume(refresh)" v-if="creating"/>
-          <q-btn color="primary" label="Update" icon="fa-solid fa-pencil" @click="() => updateVolume(refresh)" v-else/>
+        <q-card-actions align="between" v-if="!isLoading" class="q-pa-md">
+          <div>
+            <small>
+              <q-icon name="fa-solid fa-exclamation-triangle"/>
+              You cannot change backup or encryption settings in the existing volume.
+            </small>
+          </div>
+          <div>
+            <q-btn label="Cancel" v-close-popup class="q-mr-sm"/>
+            <q-btn color="positive" label="Create" icon="fa-solid fa-plus" @click="() => createVolume(onRefresh)" v-if="creating"/>
+            <q-btn color="primary" label="Update" icon="fa-solid fa-pencil" @click="() => updateVolume(onRefresh)" v-else/>
+          </div>
         </q-card-actions>
         <q-card-actions align="center" v-else class="q-mb-sm q-pa-md">
           <q-spinner size="4em" color="primary"/>
@@ -96,7 +106,8 @@
 
 import {onMounted, ref, watch} from "vue";
 import useVolumeManage from "src/modules/Volume/useVolumeManage";
-import {FILE_PARTITION, FILE_PARTITION_TRANS} from "src/modules/Volume/volumeConst.js";
+import {BACKUP, ENCRYPTION, FILE_PARTITION, FILE_PARTITION_TRANS} from "src/modules/Volume/volumeConst.js";
+import {useQuasar} from "quasar";
 
 const props = defineProps({
   volume: {
@@ -109,12 +120,15 @@ const props = defineProps({
 
 const showing = ref(false)
 const creating = ref(true)
+const wasInitBackup = ref(false)
+const $q = useQuasar()
 
 const { isLoading, data, form, updateVolume, createVolume } = useVolumeManage()
 
 onMounted(() => {
   if (props.volume !== null) {
     data.value = {...props.volume, settings: {...props.volume.settings}}
+    wasInitBackup.value = props.volume.settings.backup === BACKUP.RAID
     creating.value = false
   }
 })
@@ -126,25 +140,36 @@ watch(isLoading, (newValue) => {
   }
 })
 
+const onRefresh = () => {
+  props.refresh()
+  if (!wasInitBackup.value && data.value.settings.backup === BACKUP.RAID) {
+    $q.dialog({
+      title: 'Information',
+      message: 'Backup is enabled. Please make sure to backup your data before deleting the volume.',
+      persistent: true
+    })
+  }
+}
+
 const backupOptions = [
   {
-    label: 'RAID1',
-    value: 1,
+    label: 'RAID10',
+    value: BACKUP.RAID,
   },
   {
     label: 'No backup',
-    value: 2,
+    value: BACKUP.NONE,
   },
 ]
 
 const encryptionOptions = [
   {
     label: 'ON',
-    value: 1,
+    value: ENCRYPTION.ON,
   },
   {
     label: 'OFF',
-    value: 2,
+    value: ENCRYPTION.OFF,
   },
 ]
 
