@@ -12,7 +12,11 @@
       </div>
     </div>
 
-    <div class="row justify-center q-mt-lg" v-if="volume && !volume.isReady">
+    <div class="row justify-center q-mt-lg q-pt-lg" v-if="initializing || !volume">
+      <q-spinner size="40px"/>
+    </div>
+
+    <div class="row justify-center q-mt-lg" v-else-if="volume && !volume.isReady">
       <div class="column col-xl-4 col-sm-6 col-12">
         <q-banner>
           <template v-slot:avatar>
@@ -54,7 +58,7 @@ import BreadCrumbs from "components/File/BreadCrumbs.vue";
 import useExplorer from "src/modules/File/useExplorer.js";
 import FileType from "components/File/FileType.vue";
 import ContextMenu from "components/File/ContextMenu.vue";
-import {computed, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import useVolumeSelectList from "src/modules/Volume/useVolumeSelectList.js";
 import useUploadFile from "src/modules/File/useUploadFile.js";
@@ -66,6 +70,7 @@ const { getVolume } = useVolumeSelectList()
 
 const route = useRoute()
 const router = useRouter()
+const initializing = ref(false)
 
 const noFileMsg = computed(() => {
   if (!volume.value) return 'No volumes found. Please go to `Volumes` tab to create your first volume.'
@@ -90,6 +95,7 @@ const computedFiles = computed(() => {
 
 // Handle route changing for example when going back in browser
 watch(route, async (route) => {
+  initializing.value = true
   if (route.name !== 'dashboard') return
 
   const newVolumeUuid = route.query.volumeUuid
@@ -103,9 +109,7 @@ watch(route, async (route) => {
 
     await getFiles()
   }
+
+  initializing.value = false
 })
 </script>
-
-<style scoped>
-
-</style>
