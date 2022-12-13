@@ -12,7 +12,7 @@
       </div>
     </div>
 
-    <div class="row justify-center q-mt-lg q-pt-lg" v-if="initializing || !volume">
+    <div class="row justify-center q-mt-lg q-pt-lg" v-if="initializing">
       <q-spinner size="40px"/>
     </div>
 
@@ -31,7 +31,7 @@
 
     </div>
 
-    <div v-else-if="volume">
+    <div v-else>
       <transition-group
         v-if="computedFiles.length"
         class="flex full-width full-height q-mt-lg row items-stretch"
