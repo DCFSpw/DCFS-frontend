@@ -42,4 +42,30 @@ describe("test useDiskDelete", () => {
     // Assert loading is false
     expect(isLoading.value).toBe(false);
   });
+
+  it("should replace disk, call callback and send api request", async () => {
+    const { replaceDisk, isLoading } = useDiskDelete();
+
+    const callback = vi.fn();
+    const diskUuid = "123";
+
+    mock.onDelete(`/disks/backup/${diskUuid}`).reply(200, { success: true });
+
+    expect(isLoading.value).toBe(false);
+
+    await replaceDisk({ uuid: diskUuid }, callback);
+
+    expect(mock.history.delete.length).toBe(1);
+
+    // Assert notification sent
+    expect(notifyMock)
+      .toHaveBeenCalled()
+      .toHaveBeenCalledWith(expect.objectContaining({ type: "positive" }));
+
+    // Assert callback called
+    expect(callback).toHaveBeenCalled();
+
+    // Assert loading is false
+    expect(isLoading.value).toBe(false);
+  });
 });

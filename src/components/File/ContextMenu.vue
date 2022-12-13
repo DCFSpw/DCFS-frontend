@@ -17,13 +17,17 @@
         </q-item>
       </directory-create-dialog>
 
-      <q-item clickable v-close-popup @click="getFiles(true)">
-        <q-item-section>Refresh</q-item-section>
-      </q-item>
+      <div>
+        <q-item clickable v-close-popup @click="getFiles(true)">
+          <q-item-section>Refresh</q-item-section>
+        </q-item>
+      </div>
 
-      <q-item clickable v-close-popup @click="clickUpload">
-        <q-item-section>Upload</q-item-section>
-      </q-item>
+      <div>
+        <q-item clickable v-close-popup @click="clickUpload">
+          <q-item-section>Upload</q-item-section>
+        </q-item>
+      </div>
 
       <q-separator />
 
@@ -52,15 +56,19 @@
         </q-item>
       </confirmation-dialog>
 
-      <q-item clickable v-close-popup @click="() => download(data.file)" v-if="data.file && !data.file.isUploading">
-        <q-item-section>Download</q-item-section>
-      </q-item>
+      <div>
+        <q-item clickable v-close-popup @click="() => download(data.file)" v-if="data.file && !data.file.isUploading">
+          <q-item-section>Download</q-item-section>
+        </q-item>
+      </div>
 
       <q-separator v-if="data.file && !data.file.isUploading"/>
 
-      <q-item clickable v-close-popup>
-        <q-item-section>Cancel</q-item-section>
-      </q-item>
+      <div>
+        <q-item clickable v-close-popup>
+          <q-item-section>Cancel</q-item-section>
+        </q-item>
+      </div>
 
     </q-list>
 
