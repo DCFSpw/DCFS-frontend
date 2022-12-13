@@ -32,21 +32,33 @@
           >
             <q-btn color="primary" icon="fa-solid fa-pencil" @click="on"/>
           </disk-update-form>
-
           <confirmation-dialog
             v-slot="{ on }"
-            :callback="() => deleteDisk(disk, () => refresh({ deleting: true }))"
+            :callback="() => replaceDisk(disk, () => refresh({ deleting: true }))"
             :with-progress="true"
             :isLoading="isLoading"
             title="Confirmation"
-            :message="`Are you sure that you want to delete disk: ${disk.name}?`"
+            :message="`Are you sure that you want to replace disk: ${disk.name} in this RAID group?`"
           >
-            <q-btn color="negative" icon="fa-solid fa-trash" @click="on" class="q-ma-sm"/>
+            <q-btn color="secondary" icon="fa-solid fa-arrow-up-right-from-square" @click="on" class="q-ma-sm"/>
           </confirmation-dialog>
         </div>
       </div>
 
     </q-card-section>
+
+    <q-card-actions align="center">
+      <confirmation-dialog
+        v-slot="{ on }"
+        :callback="() => deleteDisk(disks.at(0), () => refresh({ deleting: true }))"
+        :with-progress="true"
+        :isLoading="isLoading"
+        title="Confirmation"
+        :message="`Are you sure that you want to delete all disks in this group?`"
+      >
+        <q-btn color="negative" icon="fa-solid fa-trash" @click="on" class="q-ma-sm" label="Delete group"/>
+      </confirmation-dialog>
+    </q-card-actions>
   </q-card>
 </template>
 
@@ -63,7 +75,7 @@ const props = defineProps({
   disks: Array,
   refresh: Function
 })
-const { isLoading, deleteDisk } = useDiskDelete()
+const { isLoading, deleteDisk, replaceDisk } = useDiskDelete()
 
 </script>
 

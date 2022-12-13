@@ -20,8 +20,23 @@ export default function () {
     }
   };
 
+  const replaceDisk = async ({ uuid }, callback) => {
+    isLoading.value = true;
+    try {
+      await diskApi.replace(uuid);
+      await callback();
+      notify({
+        type: "positive",
+        message: "Disk has been replaced",
+      });
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
   return {
     isLoading,
     deleteDisk,
+    replaceDisk,
   };
 }
