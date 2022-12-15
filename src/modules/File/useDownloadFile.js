@@ -6,6 +6,7 @@ export const BLOCK_DOWNLOAD_TRIES = 3;
 export const NOT_COMPLETE_HEADER_VALUE = "not complete";
 
 const downloadingFile = ref();
+const downloadingFileProgress = ref({});
 
 export default function () {
   const isLoading = ref(false);
@@ -38,8 +39,16 @@ export default function () {
       }
     } while (!isSuccess && tryNumber <= BLOCK_DOWNLOAD_TRIES);
 
+    increaseDownloadProgress();
     if (isSuccess) return result;
     else throw error;
+  };
+
+  const increaseDownloadProgress = () => {
+    downloadingFileProgress.value = {
+      ...downloadingFileProgress.value,
+      current: downloadingFileProgress.value.current + 1,
+    };
   };
 
   const concatenate = (arrays) => {
@@ -55,6 +64,8 @@ export default function () {
   };
 
   const downloadSingle = async (file, block) => {
+    downloadingFileProgress.value = { current: 0, total: 1 };
+
     const { data: buffers, headers } = await getBlock(file, block);
     const isCorrupted = getIsCorrupted(headers);
     if (isCorrupted) showCorruptedDialog(file.name);
@@ -62,6 +73,8 @@ export default function () {
   };
 
   const downloadMultiple = async (file, blocks) => {
+    downloadingFileProgress.value = { current: 0, total: blocks.length };
+
     return await Promise.all(
       blocks.map(
         (block) =>
@@ -156,6 +169,7 @@ export default function () {
   return {
     isLoading,
     downloadingFile,
+    downloadingFileProgress,
     download,
   };
 }
