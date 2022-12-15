@@ -1,7 +1,7 @@
 import axios from "axios";
 import useUserSession from "src/modules/useUserSession";
-import { Notify } from "quasar";
 import { getJwtErrorCodes } from "src/api/errorCodeEnum";
+import useNotification from "src/modules/useNotification.js";
 const AxiosInstance = axios.create({
   baseURL: process.env.VUE_APP_API_URL,
   timeout: 3600_000,
@@ -83,7 +83,8 @@ AxiosInstance.interceptors.response.use(
       window.location.href = "/";
     }
 
-    Notify.create({
+    const { notify } = useNotification();
+    notify({
       type: "negative",
       message: errMsg,
     });
