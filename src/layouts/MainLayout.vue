@@ -16,7 +16,9 @@
         </q-toolbar-title>
 
         <div class="q-ml-md">
-          <q-avatar color="grey" icon="fa-solid fa-user" style="cursor: pointer">
+          <bell-notifications/>
+
+          <q-avatar color="grey" icon="fa-solid fa-user" style="cursor: pointer" size="md">
             <q-menu>
               <div class="row no-wrap q-pt-md justify-center">
                 Hello {{ user.firstName }} {{ user.lastName }}!
@@ -116,6 +118,7 @@ import useUserSession from "src/modules/useUserSession";
 import useProvider from "src/modules/Provider/useProvider";
 import UploadProgress from "components/File/UploadProgress.vue";
 import useLogout from "src/modules/Auth/useLogout.js";
+import BellNotifications from "components/BellNotifications.vue";
 
 const menuList = [
   {
