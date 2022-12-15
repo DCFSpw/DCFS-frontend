@@ -17,24 +17,12 @@
     <div class="upload-block" :class="{ zeroHeight: hidden }" style="width: 300px">
       <q-list bordered separator class="q-pa-md" style="max-height: 300px; overflow: auto;">
         <q-item v-if="downloadingFile">
-          <q-item-section class="flex items-center" style="flex-direction: row; justify-content: flex-start !important;">
-            <q-circular-progress
-              indeterminate
-              show-value
-              font-size="10px"
-              size="30px"
-              :thickness="0.1"
-              color="primary"
-              class="q-mr-md"
-            >
-              <q-icon name="fa-solid fa-arrow-down" class="q-mr-xs" />
-            </q-circular-progress>
-            {{ downloadingFile.name }}
-          </q-item-section>
+          <progress-file :file="downloadingFile" :downloading="true"/>
         </q-item>
 
         <q-item v-for="file in flatUploadingFiles" :key="file.uuid">
-          <q-item-section class="flex items-center" style="flex-direction: row; justify-content: flex-start !important;">
+          <progress-file :file="file" :downloading="false"/>
+<!--          <q-item-section class="flex items-center" style="flex-direction: row; justify-content: flex-start !important;">
             <q-circular-progress
               indeterminate
               show-value
@@ -43,11 +31,13 @@
               :thickness="0.1"
               color="primary"
               class="q-mr-md"
+              :value="getPercent(uploadingFilesProgress[file.uuid])"
             >
               <q-icon name="fa-solid fa-arrow-up" class="q-mr-xs" />
             </q-circular-progress>
             {{ file.name }}
-          </q-item-section>
+            {{ uploadingFilesProgress[file.uuid] }}
+          </q-item-section>-->
         </q-item>
       </q-list>
     </div>
@@ -60,6 +50,7 @@
 import useUploadFile from "src/modules/File/useUploadFile.js";
 import {computed, ref, watch} from "vue";
 import useDownloadFile from "src/modules/File/useDownloadFile.js";
+import ProgressFile from "components/File/ProgressFile.vue";
 
 const { downloadingFile } = useDownloadFile()
 const { uploadingFiles } = useUploadFile()

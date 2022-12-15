@@ -7,6 +7,7 @@ export const BLOCK_UPLOAD_TRIES = 3;
 export const RETRY_UPLOAD_HTTP_CODE = 449;
 
 const uploadingFiles = ref([]);
+const uploadingFilesProgress = ref({});
 
 export default function () {
   const isLoading = ref(false);
@@ -15,8 +16,6 @@ export default function () {
   const { volume, root, getFiles } = useExplorer();
 
   const createFormData = (file, block, key) => {
-    // if (typeof FormData === "undefined") return null;
-
     const formData = new FormData();
     formData.set("block", block.data, `part.${key}`);
     formData.append("fileUUID", file.uuid);
@@ -43,6 +42,8 @@ export default function () {
       }
     } while (!isSuccess && tryNumber <= BLOCK_UPLOAD_TRIES);
 
+    increaseUploadProgress(file.uuid);
+
     if (isSuccess) return result;
     else throw error;
   };
@@ -58,6 +59,16 @@ export default function () {
     data[volumeUuid][rootUuid][file.uuid] = file;
 
     uploadingFiles.value = data;
+  };
+
+  const increaseUploadProgress = (fileUuid) => {
+    uploadingFilesProgress.value = {
+      ...uploadingFilesProgress.value,
+      [fileUuid]: {
+        ...uploadingFilesProgress.value[fileUuid],
+        current: uploadingFilesProgress.value[fileUuid].current + 1,
+      },
+    };
   };
 
   const removeUploadingFile = (volumeUuid, rootUuid, file) => {
@@ -124,6 +135,11 @@ export default function () {
   };
 
   const uploadBlocks = async (file, blocks, blocksToUpload = null) => {
+    uploadingFilesProgress.value = {
+      ...uploadingFilesProgress.value,
+      [file.uuid]: { current: 0, total: blocks.length },
+    };
+
     const promises = blocks
       .filter((block) => {
         if (blocksToUpload === null) return true;
@@ -172,5 +188,6 @@ export default function () {
     isLoading,
     upload,
     uploadingFiles,
+    uploadingFilesProgress,
   };
 }
