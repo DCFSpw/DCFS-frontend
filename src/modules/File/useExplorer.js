@@ -62,7 +62,7 @@ export default function () {
   const setQueryParams = async (reloadFiles = true) => {
     let query = { volumeUuid: volume.value.uuid };
     if (root.value) query.rootUuid = root.value.uuid;
-
+    
     await router.push({
       name: "dashboard",
       query,
