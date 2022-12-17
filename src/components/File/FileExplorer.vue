@@ -100,7 +100,9 @@ watch(route, async (route) => {
 
   const newVolumeUuid = route.query.volumeUuid
   const newRootUuid = route.query.rootUuid
+
   if (newVolumeUuid !== volume.value.uuid || newRootUuid !== root.value?.uuid) {
+
     if (newVolumeUuid !== volume.value.uuid && newVolumeUuid)
       volume.value = await getVolume(newVolumeUuid)
 

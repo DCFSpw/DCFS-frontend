@@ -5,7 +5,7 @@
         <q-breadcrumbs-el
           icon="home"
           :label="getName(volume.name)"
-          to="/"
+          style="cursor: pointer;"
           @click="goPath(null)"
           @drop="onDrop($event, null)"
         />
@@ -14,8 +14,8 @@
 
         <q-breadcrumbs-el
           v-for="p in sanitizedPath"
+          style="cursor: pointer;"
           :key="p.uuid"
-          to="/"
           :label="getName(p.name)"
           @click="goPath(p)"
           @drop="onDrop($event, p)"
