@@ -18,7 +18,7 @@
         <div class="q-ml-md">
           <bell-notifications/>
 
-          <q-avatar color="grey" icon="fa-solid fa-user" style="cursor: pointer" size="md">
+          <q-btn dense color="grey" round icon="fa-solid fa-user" class="q-mr-sm" size="md">
             <q-menu>
               <div class="row no-wrap q-pt-md justify-center">
                 Hello {{ user.firstName }} {{ user.lastName }}!
@@ -54,7 +54,7 @@
                 </div>
               </div>
             </q-menu>
-          </q-avatar>
+          </q-btn>
         </div>
       </q-toolbar>
     </q-header>
